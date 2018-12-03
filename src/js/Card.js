@@ -12,7 +12,7 @@ function MyCard(props) {
   const coreData = props.data;
 
   return (
-    <Card className={'card'}>
+    <Card className={'card'} onClick={props.onClick}>
       <CardContent>
         <Typography color="textSecondary" gutterBottom>
           New

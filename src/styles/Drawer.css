@@ -1,0 +1,7 @@
+.Drawer{
+  width: 50vmax;
+  min-width: 600px;
+  font-family: 'Roboto', sans-serif;
+  padding: 12px;
+  align-items: center;
+}

@@ -1,8 +1,10 @@
 import React from 'react';
 import {withStyles} from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import MyCard from "./Card";
+import Card from "./Card";
 import mockData from "./data-fetch/mock-data"
+import connect from "react-redux/es/connect/connect";
+import {toggleDrawer} from "./actions/actions";
 
 
 const styles = ({
@@ -11,7 +13,25 @@ const styles = ({
   },
 });
 
-class GuttersGrid extends React.Component {
+const mapStateToProps = state => {
+  return {data: state.pageData}
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    openDrawer: drawerData => dispatch(toggleDrawer(drawerData)),
+  };
+};
+
+class CardsList extends React.Component {
+
+  onCardClick(id, number) {
+    let drawerData = {};
+    drawerData.isOpen = true;
+    drawerData.id = id;
+    drawerData.number = number;
+    this.props.openDrawer(drawerData);
+  }
 
   render() {
     const spacing = 16;
@@ -20,9 +40,10 @@ class GuttersGrid extends React.Component {
       <Grid container className={"root"} spacing={spacing}>
         <Grid item xs={12}>
           <Grid container justify="center" spacing={Number(spacing)}>
-            {mockData.map((cardData) => (
+            {this.props.data.map((cardData) => (
                 <Grid key={cardData.coreData.id} item>
-                  <MyCard key={cardData.coreData.id} data={cardData}/>
+                  <Card key={cardData.coreData.id} data={cardData.coreData}
+                        onClick={() => this.onCardClick(cardData.coreData.id, cardData.coreData.number)}/>
                 </Grid>
               )
             )}
@@ -38,5 +59,7 @@ class GuttersGrid extends React.Component {
   }
 }
 
+const ConnectedCardsList = connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(CardsList));
 
-export default withStyles(styles)(GuttersGrid);
+export default ConnectedCardsList;
+

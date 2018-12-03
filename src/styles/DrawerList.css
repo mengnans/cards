@@ -1,0 +1,14 @@
+.Drawer-list {
+  font-size: 1.0em;
+  padding: 12px;
+}
+
+.List-content {
+  border-bottom: #cdcdcd solid 1px;
+  height: 100%;
+  vertical-align: bottom;
+  margin-left: 12px;
+  font-size: 1.2em;
+  min-height: 23px;
+  max-width: 50vmax;
+}

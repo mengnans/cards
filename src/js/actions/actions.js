@@ -1,4 +1,4 @@
-import {ADD_PERSON, REMOVE_PERSON} from "./constants/action-types";
+import {TOGGLE_DRAWER, PAGE_CHANGE} from "./constants/action-types";
 
-export const addPerson = person => ({type: ADD_PERSON, payload: person});
-export const removePerson = () => ({type: REMOVE_PERSON});
+export const pageChange = pageNumber => ({type: PAGE_CHANGE, payload: pageNumber});
+export const toggleDrawer = (drawerData) => ({type: TOGGLE_DRAWER, payload: drawerData});

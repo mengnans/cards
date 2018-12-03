@@ -1,0 +1,14 @@
+.Drawer-header {
+  width: 50vmax;
+  min-width: 600px;
+  font-size: 3.0em;
+  padding: 12px;
+}
+
+.Drawer-exit {
+  position:absolute;
+  font-size: 0.7em;
+  color: #919191;
+  right: 5px;
+  top: 0;
+}

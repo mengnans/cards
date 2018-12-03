@@ -1,2 +1,2 @@
-export const ADD_PERSON = "ADD_PERSON";
-export const REMOVE_PERSON = "REMOVE_PERSON";
+export const PAGE_CHANGE = "PAGE_CHANGE";
+export const TOGGLE_DRAWER = "TOGGLE_DRAWER";
