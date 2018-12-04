@@ -2,22 +2,23 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import LinesEllipsis from 'react-lines-ellipsis'
 
-const maxLine = 2;
 const ellipsis = '...';
 
-const AutoHiddenDescription = (props) => {
+const Line = (props) => {
     return (
       <LinesEllipsis
         text= {props.description}
-        maxLine={maxLine}
+        maxLine={props.maxLine}
         ellipsis={ellipsis}
         trimRight
+        basedOn="words"
       />
     );
 };
 
-AutoHiddenDescription.propTypes = {
+Line.propTypes = {
   description: PropTypes.string.isRequired,
+  maxLine: PropTypes.number.isRequired,
 };
 
-export default AutoHiddenDescription;
+export default Line;

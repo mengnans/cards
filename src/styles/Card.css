@@ -1,5 +1,19 @@
-.card {
+.Card {
   width: 275px;
   height: 220px;
 }
 
+.Description {
+  height: 40px;
+  width: 220px
+}
+
+.Card-loading-div {
+  height: 100%;
+}
+
+.Card-loading-progress {
+  position:relative;
+  top:30%;
+  left:35%;
+}

@@ -21,18 +21,12 @@ class Drawer extends React.Component {
 
   render() {
     let id = this.props.drawerData.id;
-    let children;
-    if (!id) {
-      children = null;
-    } else {
-      const number = this.props.drawerData.number;
-      const extractedData = extractData(this.props.data, id);
-      children =
-        <div className="Drawer">
-          <DrawerHeader number={number}/>
-          <DrawerList extractedData={extractedData} id={id}/>
-        </div>;
-    }
+    let children = id ?
+      <div className="Drawer">
+        <DrawerHeader number={this.props.drawerData.number}/>
+        <DrawerList extractedData={extractData(this.props.data, id)} id={id}/>
+      </div>
+      : null;
     return (
       <div>
         <SwipeableDrawer

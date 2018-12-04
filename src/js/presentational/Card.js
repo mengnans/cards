@@ -5,42 +5,58 @@ import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import '../../styles/Card.css';
-import AutoHiddenDescription from "../AutoHiddenDescription";
+import Line from "../Line";
 import PropTypes from "prop-types";
+import CircularProgress from "@material-ui/core/CircularProgress/CircularProgress";
 
 
-const card = (props) => {
-  const coreData = props.data;
+class CardItem extends React.Component {
 
-  return (
-    <Card className={'card'} onClick={props.onClick}>
-      <CardContent>
-        <Typography color="textSecondary" gutterBottom>
-          New
-        </Typography>
-        <Typography variant="h5" component="h2">
-          {coreData.number}
-        </Typography>
-        <Typography color="textSecondary">
-          Application: {coreData.application}
-        </Typography>
-        <Typography color="textSecondary">
-          AssigneeA: {coreData.assignee}
-        </Typography>
-        <Typography component="div">
-          <AutoHiddenDescription description={coreData.shortDescription}/>
-        </Typography>
-      </CardContent>
-      <CardActions>
-        <Button size="small">Learn More</Button>
-      </CardActions>
-    </Card>
-  );
-};
+  shouldComponentUpdate(nextProps, nextState, nextContext) {
+    return nextProps.data.coreData.id === this.props.data.coreData.id;
+  }
 
-card.propTypes = {
+  render() {
+    const coreData = this.props.data;
+    let children =
+      <div>
+        <CardContent>
+          <Typography color="textSecondary" gutterBottom>
+            New
+          </Typography>
+          <Typography variant="h5" component="h2">
+            <Line description={coreData.number} maxLine={1}/>
+          </Typography>
+          <Typography color="textSecondary">
+            <Line description={"Application: " + coreData.application} maxLine={1}/>
+          </Typography>
+          <Typography color="textSecondary">
+            <Line description={"Assignee: " + coreData.assignee} maxLine={1}/>
+          </Typography>
+          <Typography component="div" className={"Description"}>
+            <Line description={coreData.shortDescription} maxLine={2}/>
+          </Typography>
+        </CardContent>
+        <CardActions>
+          <Button size="small">Learn More</Button>
+        </CardActions>
+      </div>;
+    // children =
+    //   <div className="Card-loading-div">
+    //     <CircularProgress className="Card-loading-progress" size={80}/>
+    //   </div>;
+
+    return (
+      <Card className={'Card'} onClick={this.props.onClick}>
+        {children}
+      </Card>
+    );
+  }
+}
+
+CardItem.propTypes = {
   data: PropTypes.object.isRequired,
   onClick: PropTypes.func.isRequired,
 };
 
-export default card;
+export default CardItem;
