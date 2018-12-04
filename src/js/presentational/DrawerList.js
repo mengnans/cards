@@ -12,7 +12,7 @@ const styles = {
 
 const drawerList = (props) => {
   return (
-    props.extractedData.map((data) => (
+    props.drawerListData.map((data) => (
       <Grid key={props.id + data.label} container className="Drawer-list">
         <Grid item xs={2}>
           {data.label}
@@ -27,7 +27,7 @@ const drawerList = (props) => {
 };
 
 drawerList.propTypes = {
-  extractedData: PropTypes.array.isRequired,
+  drawerListData: PropTypes.array.isRequired,
   id: PropTypes.string.isRequired,
 };
 

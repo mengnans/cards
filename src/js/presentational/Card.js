@@ -12,10 +12,6 @@ import CircularProgress from "@material-ui/core/CircularProgress/CircularProgres
 
 class CardItem extends React.Component {
 
-  // shouldComponentUpdate(nextProps, nextState, nextContext) {
-  //   return nextProps.data.coreData && nextProps.data.coreData.id === this.props.data.coreData.id;
-  // }
-
   render() {
     const coreData = this.props.data;
     let children = this.props.isLoading ?
@@ -28,7 +24,7 @@ class CardItem extends React.Component {
           <Typography color="textSecondary" gutterBottom>
             New
           </Typography>
-          <Typography component="div" variant="h5" component="h2">
+          <Typography component="div">
             <Line description={coreData.number} maxLine={1}/>
           </Typography>
           <Typography component="div" color="textSecondary">
