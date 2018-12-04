@@ -19,11 +19,17 @@ const mapDispatchToProps = dispatch => {
 
 class Drawer extends React.Component {
 
+  onCloseDrawer(){
+    let drawerData = {};
+    drawerData.isOpen = false;
+    this.props.toggleDrawer(drawerData);
+  }
+
   render() {
     let id = this.props.drawerData.id;
     let children = id ?
       <div className="Drawer">
-        <DrawerHeader number={this.props.drawerData.number}/>
+        <DrawerHeader number={this.props.drawerData.number} onClickExit={() => this.onCloseDrawer()}/>
         <DrawerList extractedData={extractData(this.props.data, id)} id={id}/>
       </div>
       : null;
@@ -33,9 +39,7 @@ class Drawer extends React.Component {
           anchor="right"
           open={this.props.drawerData.isOpen}
           onClose={() => {
-            let drawerData = {};
-            drawerData.isOpen = false;
-            this.props.toggleDrawer(drawerData);
+            this.onCloseDrawer();
           }}
           onOpen={() => {
             let drawerData = {};

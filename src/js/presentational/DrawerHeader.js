@@ -26,6 +26,7 @@ const drawerHeader = (props) => {
 
 drawerHeader.propTypes = {
   number: PropTypes.string.isRequired,
+  onClickExit: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(drawerHeader);

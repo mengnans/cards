@@ -6,6 +6,7 @@
 
 .Drawer-exit {
   position:absolute;
+  cursor:pointer;
   font-size: 0.7em;
   color: #919191;
   right: 15px;

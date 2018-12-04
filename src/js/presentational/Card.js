@@ -5,32 +5,36 @@ import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import '../../styles/Card.css';
-import Line from "../Line";
+import Line from "./Line";
 import PropTypes from "prop-types";
 import CircularProgress from "@material-ui/core/CircularProgress/CircularProgress";
 
 
 class CardItem extends React.Component {
 
-  shouldComponentUpdate(nextProps, nextState, nextContext) {
-    return nextProps.data.coreData.id === this.props.data.coreData.id;
-  }
+  // shouldComponentUpdate(nextProps, nextState, nextContext) {
+  //   return nextProps.data.coreData && nextProps.data.coreData.id === this.props.data.coreData.id;
+  // }
 
   render() {
     const coreData = this.props.data;
-    let children =
+    let children = this.props.isLoading ?
+      <div className="Card-loading-div">
+        <CircularProgress className="Card-loading-progress" size={80}/>
+      </div>
+      :
       <div>
         <CardContent>
           <Typography color="textSecondary" gutterBottom>
             New
           </Typography>
-          <Typography variant="h5" component="h2">
+          <Typography component="div" variant="h5" component="h2">
             <Line description={coreData.number} maxLine={1}/>
           </Typography>
-          <Typography color="textSecondary">
+          <Typography component="div" color="textSecondary">
             <Line description={"Application: " + coreData.application} maxLine={1}/>
           </Typography>
-          <Typography color="textSecondary">
+          <Typography component="div" color="textSecondary">
             <Line description={"Assignee: " + coreData.assignee} maxLine={1}/>
           </Typography>
           <Typography component="div" className={"Description"}>
@@ -41,10 +45,6 @@ class CardItem extends React.Component {
           <Button size="small">Learn More</Button>
         </CardActions>
       </div>;
-    // children =
-    //   <div className="Card-loading-div">
-    //     <CircularProgress className="Card-loading-progress" size={80}/>
-    //   </div>;
 
     return (
       <Card className={'Card'} onClick={this.props.onClick}>
@@ -55,8 +55,9 @@ class CardItem extends React.Component {
 }
 
 CardItem.propTypes = {
-  data: PropTypes.object.isRequired,
-  onClick: PropTypes.func.isRequired,
+  data: PropTypes.object,
+  onClick: PropTypes.func,
+  isLoading: PropTypes.bool.isRequired,
 };
 
 export default CardItem;

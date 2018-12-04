@@ -4,8 +4,21 @@ import CardsList from "./CardsList";
 import Drawer from "./container/Drawer";
 import ContentFooter from "./ContentFooter"
 import Grid from "@material-ui/core/Grid";
+import {initialLoad, toggleDrawer} from "./actions/actions";
+import {connect} from "react-redux";
+
+const mapDispatchToProps = dispatch => {
+  return {
+    initialLoad: () => dispatch(initialLoad()),
+  };
+};
 
 class AppContent extends Component {
+
+  componentDidMount(){
+    this.props.initialLoad();
+  }
+
   render() {
     const spacing = 16;
     return (
@@ -20,4 +33,6 @@ class AppContent extends Component {
   }
 }
 
-export default AppContent;
+const connectedAppContent = connect(null, mapDispatchToProps)(AppContent);
+
+export default connectedAppContent;

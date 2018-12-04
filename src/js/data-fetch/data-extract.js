@@ -1,3 +1,4 @@
+//extract the data for the drawer
 const extractData = (data, id) => {
   let selectedData;
   let extractedData = [];
