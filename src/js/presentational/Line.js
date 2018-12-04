@@ -7,7 +7,7 @@ const ellipsis = '...';
 const Line = (props) => {
     return (
       <LinesEllipsis
-        text= {props.description}
+        text= {props.text}
         maxLine={props.maxLine}
         ellipsis={ellipsis}
         trimRight
@@ -17,7 +17,7 @@ const Line = (props) => {
 };
 
 Line.propTypes = {
-  description: PropTypes.string.isRequired,
+  text: PropTypes.string.isRequired,
   maxLine: PropTypes.number.isRequired,
 };
 

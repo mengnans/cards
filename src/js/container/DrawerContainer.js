@@ -6,7 +6,7 @@ import Drawer from "../presentational/Drawer";
 import {toggleDrawer} from "../actions/actions";
 
 const mapStateToProps = state => {
-  return {pageData: state.pageData, id: state.selectedId}
+  return {currentPageData: state.currentPageData, id: state.selectedId}
 };
 
 const mapDispatchToProps = dispatch => {
@@ -24,7 +24,7 @@ class DrawerContainer extends React.Component {
     } else {
       isOpen = true;
       // extract the data needed for the drawer
-      extractedData = extractData(this.props.pageData, this.props.id);
+      extractedData = extractData(this.props.currentPageData, this.props.id);
     }
     return (
       <Drawer

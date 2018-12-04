@@ -5,7 +5,7 @@ import CardsList from "../presentational/CardsList";
 import PropTypes from "prop-types";
 
 const mapStateToProps = state => {
-  return {pageData: state.pageData,}
+  return {currentPageData: state.currentPageData,}
 };
 
 const mapDispatchToProps = dispatch => {
@@ -23,7 +23,7 @@ class CardsListContainer extends React.Component {
   render() {
     return (
       <CardsList
-        pageData={this.props.pageData}
+        currentPageData={this.props.currentPageData}
         onCardClick={(id) => this.onCardClick(id)}
       />
     );
@@ -31,7 +31,7 @@ class CardsListContainer extends React.Component {
 }
 
 CardsListContainer.propTypes = {
-  pageData: PropTypes.array,
+  currentPageData: PropTypes.array,
 };
 
 const ConnectedCardsListContainer = connect(mapStateToProps, mapDispatchToProps)(CardsListContainer);

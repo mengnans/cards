@@ -25,7 +25,10 @@ export const get = (url = '', params = {}) => {
       .then(
         (result) => {
           if (result) {
-            resolve(result, totalItemNumber);
+            let dataFetched = {};
+            dataFetched.data = result;
+            dataFetched.totalItemNumber = totalItemNumber;
+            resolve(dataFetched);
           } else {
             console.log(result.data || 'fetching data failed');
             reject();

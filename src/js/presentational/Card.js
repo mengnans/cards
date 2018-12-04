@@ -24,17 +24,17 @@ class CardItem extends React.Component {
           <Typography color="textSecondary" gutterBottom>
             New
           </Typography>
-          <Typography component="div">
-            <Line description={coreData.number} maxLine={1}/>
+          <Typography variant="h5" component="h2">
+            <Line text={coreData.number} maxLine={1}/>
           </Typography>
           <Typography component="div" color="textSecondary">
-            <Line description={"Application: " + coreData.application} maxLine={1}/>
+            <Line text={"Application: " + coreData.application} maxLine={1}/>
           </Typography>
           <Typography component="div" color="textSecondary">
-            <Line description={"Assignee: " + coreData.assignee} maxLine={1}/>
+            <Line text={"Assignee: " + coreData.assignee} maxLine={1}/>
           </Typography>
           <Typography component="div" className={"Description"}>
-            <Line description={coreData.shortDescription} maxLine={2}/>
+            <Line text={coreData.shortDescription} maxLine={2}/>
           </Typography>
         </CardContent>
         <CardActions>
