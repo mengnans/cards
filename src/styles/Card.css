@@ -1,6 +1,7 @@
 .Card {
   width: 275px;
   height: 220px;
+  cursor: pointer;
 }
 
 .Description {
