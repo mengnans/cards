@@ -4,11 +4,12 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import '../styles/Card.css';
-import AutoHiddenDescription from "./AutoHiddenDescription";
+import '../../styles/Card.css';
+import AutoHiddenDescription from "../AutoHiddenDescription";
+import PropTypes from "prop-types";
 
 
-function MyCard(props) {
+const card = (props) => {
   const coreData = props.data;
 
   return (
@@ -35,6 +36,11 @@ function MyCard(props) {
       </CardActions>
     </Card>
   );
-}
+};
 
-export default MyCard;
+card.propTypes = {
+  data: PropTypes.object.isRequired,
+  onClick: PropTypes.func.isRequired,
+};
+
+export default card;

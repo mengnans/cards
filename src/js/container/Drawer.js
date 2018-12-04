@@ -1,11 +1,11 @@
 import React from 'react';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
-import DrawerList from "./DrawerList";
-import DrawerHeader from "./DrawerHeader";
-import extractData from "./data-fetch/data-extract";
-import '../styles/Drawer.css';
+import extractData from "../data-fetch/data-extract";
+import '../../styles/Drawer.css';
 import {connect} from "react-redux";
-import {toggleDrawer} from "./actions/actions";
+import {toggleDrawer} from "../actions/actions";
+import DrawerHeader from "../presentational/DrawerHeader";
+import DrawerList from "../presentational/DrawerList";
 
 const mapStateToProps = state => {
   return {drawerData: state.drawerData, data: state.pageData}
@@ -19,21 +19,23 @@ const mapDispatchToProps = dispatch => {
 
 class Drawer extends React.Component {
 
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     let id = this.props.drawerData.id;
-    if (typeof id === "undefined") {
-      return null;
+    let children;
+    if (!id) {
+      children = null;
+    } else {
+      const number = this.props.drawerData.number;
+      const extractedData = extractData(this.props.data, id);
+      children =
+        <div className="Drawer">
+          <DrawerHeader number={number}/>
+          <DrawerList extractedData={extractedData} id={id}/>
+        </div>;
     }
-    const number = this.props.drawerData.number;
-    const extractedData = extractData(this.props.data, id);
     return (
       <div>
         <SwipeableDrawer
-          className="Drawer"
           anchor="right"
           open={this.props.drawerData.isOpen}
           onClose={() => {
@@ -42,11 +44,12 @@ class Drawer extends React.Component {
             this.props.toggleDrawer(drawerData);
           }}
           onOpen={() => {
-            console.log("Open")
+            let drawerData = {};
+            drawerData.isOpen = true;
+            this.props.toggleDrawer(drawerData);
           }}
         >
-          <DrawerHeader number={number}/>
-          <DrawerList extractedData={extractedData} id={id}/>
+          {children}
         </SwipeableDrawer>
       </div>
     );

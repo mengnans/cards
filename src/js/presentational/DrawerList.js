@@ -1,6 +1,6 @@
 import React from "react";
 import Grid from "@material-ui/core/Grid/Grid";
-import '../styles/DrawerList.css'
+import '../../styles/DrawerList.css'
 import {withStyles} from '@material-ui/core/styles';
 import PropTypes from "prop-types";
 

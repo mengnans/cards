@@ -1,8 +1,7 @@
 import React from 'react';
 import {withStyles} from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import Card from "./Card";
-import mockData from "./data-fetch/mock-data"
+import Card from "./presentational/Card";
 import connect from "react-redux/es/connect/connect";
 import {toggleDrawer} from "./actions/actions";
 
@@ -37,7 +36,6 @@ class CardsList extends React.Component {
     const spacing = 16;
 
     return (
-      <Grid container className={"root"} spacing={spacing}>
         <Grid item xs={12}>
           <Grid container justify="center" spacing={Number(spacing)}>
             {this.props.data.map((cardData) => (
@@ -49,12 +47,6 @@ class CardsList extends React.Component {
             )}
           </Grid>
         </Grid>
-        <Grid item xs={12}>
-          <Grid container justify="center" spacing={Number(spacing)}>
-            Back 1/1414 Next
-          </Grid>
-        </Grid>
-      </Grid>
     );
   }
 }

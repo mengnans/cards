@@ -3,7 +3,7 @@ import {TOGGLE_DRAWER} from "../actions/constants/action-types";
 
 const initialState = {
   pageData: mockData,
-  drawerData: {isOpen: false},
+  drawerData: {isOpen: false, id: null, number: null},
 };
 
 const rootReducer = (state = initialState, action) => {
