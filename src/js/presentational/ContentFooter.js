@@ -4,33 +4,31 @@ import React from "react";
 import "../../styles/ContentFooter.css"
 import PropTypes from "prop-types";
 
-class ContentFooter extends React.Component {
+function ContentFooter(props) {
 
-  render() {
-    const spacing = 16;
-    let backButtonDisabled, nextButtonDisabled = false;
-    if (this.props.currentPage === 1) {
-      backButtonDisabled = true;
-    }
-    if((this.props.totalPage === "?") || (this.props.currentPage.toString() === this.props.totalPage)){
-      nextButtonDisabled = true;
-    }
-    return (
-      <Grid item xs={12}>
-        <Grid container justify="center" className="Content-footer" spacing={Number(spacing)}>
-          <Button disabled={backButtonDisabled} onClick={this.props.onClickBack}>Back</Button>
-
-          <div className="Page-info">
-            {this.props.currentPage}
-            /
-            {this.props.totalPage}
-          </div>
-
-          <Button disabled={nextButtonDisabled} onClick={this.props.onClickNext}>Next</Button>
-        </Grid>
-      </Grid>
-    )
+  let {totalPage, currentPage, onClickBack, onClickNext} = props;
+  let backButtonDisabled, nextButtonDisabled = false;
+  // if it's the first page, disable the back button
+  if (currentPage === 1) {
+    backButtonDisabled = true;
   }
+  // if it's the last page, disable the next button
+  if ((totalPage === "?") || (currentPage.toString() === totalPage)) {
+    nextButtonDisabled = true;
+  }
+  return (
+    <Grid item xs={12}>
+      <Grid container justify="center" className="Content-footer" spacing={16}>
+        <Button disabled={backButtonDisabled} onClick={onClickBack}>Back</Button>
+        <div className="Page-info">
+          {currentPage}
+          /
+          {totalPage}
+        </div>
+        <Button disabled={nextButtonDisabled} onClick={onClickNext}>Next</Button>
+      </Grid>
+    </Grid>
+  )
 }
 
 ContentFooter.propTypes = {

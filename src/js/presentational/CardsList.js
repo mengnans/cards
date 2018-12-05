@@ -11,41 +11,40 @@ const styles = ({
   },
 });
 
-class CardsList extends React.Component {
+function CardsList(props) {
 
-  render() {
-    const spacing = 16;
-    let children = TWELWE_ARRAY.map((value, index) => {
-      let coreData;
-      let noData = false;
-      if (!this.props.isLoading) {
-        if (this.props.pageData[index]) {
-          coreData = this.props.pageData[index].coreData;
-        } else {
-          noData = true;
-        }
-
+  const spacing = 16;
+  let {pageData, onCardClick, isLoading, loadingInfo, progressBarColor} = props;
+  let children = TWELWE_ARRAY.map((value, index) => {
+    let coreData, id;
+    let noData = false;
+    if (!isLoading) {
+      if (pageData[index]) {
+        coreData = pageData[index].coreData;
+        id = coreData.id;
+      } else {
+        noData = true;
       }
-      return (
-        <Grid key={index} item>
-          <CardItem coreData={coreData}
-                    onClick={() => this.props.onCardClick(coreData.id)}
-                    isLoading={this.props.isLoading}
-                    loadingInfo={this.props.loadingInfo}
-                    progressBarColor={this.props.progressBarColor}
-                    noData={noData}/>
-        </Grid>
-      )
-    });
-
+    }
     return (
-      <Grid item xs={12}>
-        <Grid container justify="center" spacing={Number(spacing)}>
-          {children}
-        </Grid>
+      <Grid key={index} item>
+        <CardItem coreData={coreData}
+                  onClick={() => onCardClick(id)}
+                  isLoading={isLoading}
+                  loadingInfo={loadingInfo}
+                  progressBarColor={progressBarColor}
+                  noData={noData}/>
       </Grid>
-    );
-  }
+    )
+  });
+
+  return (
+    <Grid item xs={12}>
+      <Grid container justify="center" spacing={Number(spacing)}>
+        {children}
+      </Grid>
+    </Grid>
+  );
 }
 
 CardsList.propTypes = {

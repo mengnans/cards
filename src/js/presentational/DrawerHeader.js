@@ -10,19 +10,19 @@ const styles = {
   },
 };
 
-const drawerHeader = (props) => {
-
+function drawerHeader(props) {
+  let {number, onClickExit} = props;
   return (
-        <Grid container className="Drawer-header">
-          <Grid item xs={10}>
-            {props.number}
-          </Grid>
-          <Grid item xs={2} className="Drawer-exit" onClick={props.onClickExit}>
-            x
-          </Grid>
-        </Grid>
+    <Grid container className="Drawer-header">
+      <Grid item xs={10}>
+        {number}
+      </Grid>
+      <Grid item xs={2} className="Drawer-exit" onClick={onClickExit}>
+        X
+      </Grid>
+    </Grid>
   );
-};
+}
 
 drawerHeader.propTypes = {
   number: PropTypes.string.isRequired,

@@ -4,6 +4,7 @@ import '../../styles/Drawer.css';
 import {connect} from "react-redux";
 import Drawer from "../presentational/Drawer";
 import {toggleDrawer} from "../actions/actions";
+import PropTypes from "prop-types";
 
 const mapStateToProps = state => {
   return {currentPageData: state.currentPageData.data, id: state.selectedId}
@@ -18,13 +19,14 @@ const mapDispatchToProps = dispatch => {
 class DrawerContainer extends React.Component {
 
   render() {
+    let {currentPageData} = this.props;
     let isOpen, extractedData;
     if (!this.props.id) {
       isOpen = false;
     } else {
       isOpen = true;
       // extract the data needed for the drawer
-      extractedData = extractData(this.props.currentPageData, this.props.id);
+      extractedData = extractData(currentPageData, this.props.id);
     }
     return (
       <Drawer
@@ -35,6 +37,10 @@ class DrawerContainer extends React.Component {
     );
   }
 }
+
+DrawerContainer.propTypes = {
+  currentPageData: PropTypes.array,
+};
 
 const ConnectedDrawerContainer = connect(mapStateToProps, mapDispatchToProps)(DrawerContainer);
 

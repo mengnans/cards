@@ -4,6 +4,7 @@ import {initialLoad, load} from "../actions/actions";
 import {connect} from "react-redux";
 import AppContent from "../presentational/AppContent";
 import {DATA_PER_PAGE} from "../constants/data-fetch-constant";
+import PropTypes from "prop-types";
 
 const mapStateToProps = state => {
   return {
@@ -22,18 +23,16 @@ const mapDispatchToProps = dispatch => {
 class AppContentContainer extends Component {
 
   componentDidMount() {
-    // load 5 pages at the beginning
-    // the first page for current page
-    // other four for caching
-    this.props.initialLoad(0, 5 * DATA_PER_PAGE);
+    let {initialLoad} = this.props;
+    initialLoad(0, 5 * DATA_PER_PAGE);
   }
 
-  componentWillReceiveProps(props, state) {
-    let {currentPageData, load, totalPage} = props;
+  componentWillReceiveProps(nextProps, nextContext) {
+    let {currentPageData, load, initialLoad, totalPage} = nextProps;
     let page = currentPageData.page - 1;
     // if no total page and it's not loading, it means the initial load has failed
     if (totalPage === "?" && !currentPageData.isLoading) {
-      this.props.initialLoad(0, 5 * DATA_PER_PAGE);
+      initialLoad(0, 5 * DATA_PER_PAGE);
     }
     // if no data, then load it
     else if (!currentPageData.data && !currentPageData.isLoading) {
@@ -47,6 +46,13 @@ class AppContentContainer extends Component {
     );
   }
 }
+
+AppContentContainer.propTypes = {
+  totalPage: PropTypes.string.isRequired,
+  currentPageData: PropTypes.object.isRequired,
+  initialLoad: PropTypes.func.isRequired,
+  load: PropTypes.func.isRequired,
+};
 
 const connectedAppContentContainer = connect(mapStateToProps, mapDispatchToProps)(AppContentContainer);
 

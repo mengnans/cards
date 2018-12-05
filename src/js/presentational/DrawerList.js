@@ -10,17 +10,18 @@ const styles = {
   },
 };
 
-const drawerList = (props) => {
+function drawerList(props) {
+  let {drawerListData, id} = props;
   return (
-    props.drawerListData.map((data) => (
-      <Grid key={props.id + data.label} container className="Drawer-list">
-        <Grid item xs={2}>
-          {data.label}
+    drawerListData.map((data) => (
+        <Grid key={id + data.label} container className="Drawer-list">
+          <Grid item xs={2}>
+            {data.label}
+          </Grid>
+          <Grid item xs={10} className="List-content">
+            {data.description}
+          </Grid>
         </Grid>
-        <Grid item xs={10} className="List-content">
-          {data.description}
-        </Grid>
-      </Grid>
       )
     )
   );

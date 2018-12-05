@@ -6,19 +6,16 @@ import DrawerContainer from "../container/DrawerContainer";
 import ContentFooterContainer from "../container/ContentFooterCotainer";
 
 
-class AppContent extends Component {
-  render() {
-    const spacing = 16;
-    return (
-      <div className="App-content">
-        <Grid container spacing={spacing}>
-          <CardsListContainer/>
-          <ContentFooterContainer/>
-        </Grid>
-        <DrawerContainer/>
-      </div>
-    );
-  }
-}
+const AppContent = () => {
+  return (
+    <div className="App-content">
+      <Grid container spacing={16}>
+        <CardsListContainer/>
+        <ContentFooterContainer/>
+      </Grid>
+      <DrawerContainer/>
+    </div>
+  );
+};
 
 export default AppContent;

@@ -21,8 +21,9 @@ class CardsListContainer extends React.Component {
   }
 
   render() {
-    let isLoading = !this.props.currentPageData.data;
-    let attemptTimes = this.props.currentPageData.attemptTimes;
+    let {currentPageData} = this.props;
+    let isLoading = !currentPageData.data;
+    let attemptTimes = currentPageData.attemptTimes;
     let progressBarColor = "primary";
     let loadingInfo = "Loading";
     if (isLoading) {
@@ -33,7 +34,7 @@ class CardsListContainer extends React.Component {
     }
     return (
       <CardsList
-        pageData={this.props.currentPageData.data}
+        pageData={currentPageData.data}
         onCardClick={(id) => this.onCardClick(id)}
         isLoading={isLoading}
         progressBarColor={progressBarColor}

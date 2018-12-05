@@ -10,58 +10,56 @@ import PropTypes from "prop-types";
 import CircularProgress from "@material-ui/core/CircularProgress/CircularProgress";
 
 
-class CardItem extends React.Component {
+function CardItem(props) {
 
-  render() {
-    const coreData = this.props.coreData;
-    let children;
-    if (this.props.noData) {
-      children =
-        <div className="Card-loading-div">
-          <div className="Card-loading-info">
-            No data
-          </div>
-        </div>;
-    } else{
-
-      children = this.props.isLoading ?
-        <div className="Card-loading-div">
-          <div className="Card-loading-info">
-            {this.props.loadingInfo}
-          </div>
-          <CircularProgress className="Card-loading-progress" color={this.props.progressBarColor} size={80}/>
+  let {coreData, noData, isLoading, onClick, progressBarColor, loadingInfo} = props;
+  let children;
+  if (noData) {
+    children =
+      <div className="Card-loading-div">
+        <div className="Card-loading-info">
+          No data
         </div>
-        :
-        <div>
-          <CardContent>
-            <Typography color="textSecondary" gutterBottom>
-              New
-            </Typography>
-            <Typography variant="h5" component="h2">
-              <Line text={coreData.number} maxLine={1}/>
-            </Typography>
-            <Typography component="div" color="textSecondary">
-              <Line text={"Application: " + coreData.application} maxLine={1}/>
-            </Typography>
-            <Typography component="div" color="textSecondary">
-              <Line text={"Assignee: " + coreData.assignee} maxLine={1}/>
-            </Typography>
-            <Typography component="div" className={"Description"}>
-              <Line text={coreData.shortDescription} maxLine={2}/>
-            </Typography>
-          </CardContent>
-          <CardActions>
-            <Button size="small">Learn More</Button>
-          </CardActions>
-        </div>;
-    }
+      </div>;
+  } else {
 
-    return (
-      <Card className={'Card'} onClick={this.props.onClick}>
-        {children}
-      </Card>
-    );
+    children = isLoading ?
+      <div className="Card-loading-div">
+        <div className="Card-loading-info">
+          {loadingInfo}
+        </div>
+        <CircularProgress className="Card-loading-progress" color={progressBarColor} size={80}/>
+      </div>
+      :
+      <div>
+        <CardContent>
+          <Typography color="textSecondary" gutterBottom>
+            New
+          </Typography>
+          <Typography variant="h5" component="h2">
+            <Line text={coreData.number} maxLine={1}/>
+          </Typography>
+          <Typography component="div" color="textSecondary">
+            <Line text={"Application: " + coreData.application} maxLine={1}/>
+          </Typography>
+          <Typography component="div" color="textSecondary">
+            <Line text={"Assignee: " + coreData.assignee} maxLine={1}/>
+          </Typography>
+          <Typography component="div" className={"Description"}>
+            <Line text={coreData.shortDescription} maxLine={2}/>
+          </Typography>
+        </CardContent>
+        <CardActions>
+          <Button size="small">Learn More</Button>
+        </CardActions>
+      </div>;
   }
+
+  return (
+    <Card className={'Card'} onClick={onClick}>
+      {children}
+    </Card>
+  );
 }
 
 CardItem.propTypes = {

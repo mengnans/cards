@@ -37,10 +37,17 @@ const rootReducer = (state = defaultState, action) => {
       if (!nextPageData) {
         nextPageData = createInitialPageData(nextPage);
       } else {
-
+        // remove this data from cache
+        // since it will be saved in current page
+        for( let i = 0; i < cache.length; i++){
+          if ( cache[i].page === nextPage) {
+            cache.splice(i, 1);
+            break;
+          }
+        }
       }
       let currentPageDataFromCache = getDataFromCache(currentPage, cache);
-      // if current page is not in the cache
+      // if current page data is not in the cache
       if (!currentPageDataFromCache) {
         cache.push(state.currentPageData);
         if (cache.length > MAX_CACHE_LENGTH) {
@@ -89,9 +96,11 @@ const rootReducer = (state = defaultState, action) => {
       for (let i = 0; i < cache.length; i++) {
         cache[i].data = fetchedForwardData.slice(i * DATA_PER_PAGE, (i + 1) * DATA_PER_PAGE);
         cache[i].isLoading = false;
+        cache[i].attemptTimes ++;
       }
       currentPageData.data = fetchedCurrentPageData;
       currentPageData.isLoading = false;
+      currentPageData.attemptTimes ++;
       totalPage = calcTotalPage(totalItemNumber, DATA_PER_PAGE);
 
       return {

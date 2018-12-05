@@ -4,16 +4,17 @@ import LinesEllipsis from 'react-lines-ellipsis'
 
 const ellipsis = '...';
 
-const Line = (props) => {
-    return (
-      <LinesEllipsis
-        text= {props.text}
-        maxLine={props.maxLine}
-        ellipsis={ellipsis}
-        trimRight
-        basedOn="words"
-      />
-    );
+function Line(props) {
+  let {text, maxLine} = props;
+  return (
+    <LinesEllipsis
+      text={text}
+      maxLine={maxLine}
+      ellipsis={ellipsis}
+      trimRight
+      basedOn="words"
+    />
+  );
 };
 
 Line.propTypes = {
