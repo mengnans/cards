@@ -1,12 +1,13 @@
+/* eslint-disable no-unused-vars */
 import React from "react";
-import "../../styles/ContentFooter.css"
+import "../../styles/ContentFooter.css";
 import ContentFooter from "../presentational/ContentFooter";
 import connect from "react-redux/es/connect/connect";
 import {pageChange} from "../actions/actions";
 import PropTypes from "prop-types";
 
 const mapStateToProps = state => {
-  return {currentPage: state.currentPageData.page, totalPage: state.totalPage,}
+  return {currentPage: state.currentPageData.page, totalPage: state.totalPage,};
 };
 
 const mapDispatchToProps = dispatch => {
@@ -24,7 +25,7 @@ const ContentFooterContainer = (props) => {
       onClickNext={() => pageChange(currentPage + 1)}
       onClickBack={() => pageChange(currentPage - 1)}
     />
-  )
+  );
 };
 
 ContentFooterContainer.propTypes = {

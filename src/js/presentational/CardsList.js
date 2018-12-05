@@ -1,9 +1,11 @@
-import React from 'react';
-import Grid from '@material-ui/core/Grid';
+/* eslint-disable indent */
+/* eslint-disable no-unused-vars */
+import React from "react";
+import Grid from "@material-ui/core/Grid";
 import CardItem from "./Card";
 import {withStyles} from "@material-ui/core";
 import PropTypes from "prop-types";
-import {TWELVE_ARRAY} from "../constants/data-fetch-constant";
+import {TWELVE_ARRAY} from "../constants/constant";
 
 const styles = ({
   root: {
@@ -35,7 +37,7 @@ function CardsList(props) {
                   progressBarColor={progressBarColor}
                   noData={noData}/>
       </Grid>
-    )
+    );
   });
 
   return (

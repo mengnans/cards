@@ -1,7 +1,9 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable indent */
 import React from "react";
 import Grid from "@material-ui/core/Grid/Grid";
-import '../../styles/DrawerList.css'
-import {withStyles} from '@material-ui/core/styles';
+import "../../styles/DrawerList.css";
+import {withStyles} from "@material-ui/core/styles";
 import PropTypes from "prop-types";
 
 const styles = {
@@ -26,7 +28,7 @@ function drawerList(props) {
       )
     )
   );
-};
+}
 
 drawerList.propTypes = {
   drawerListData: PropTypes.array.isRequired,

@@ -1,10 +1,11 @@
-import React from 'react';
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-import '../../styles/Card.css';
+/* eslint-disable no-unused-vars */
+import React from "react";
+import Card from "@material-ui/core/Card";
+import CardActions from "@material-ui/core/CardActions";
+import CardContent from "@material-ui/core/CardContent";
+import Button from "@material-ui/core/Button";
+import Typography from "@material-ui/core/Typography";
+import "../../styles/Card.css";
 import Line from "./Line";
 import PropTypes from "prop-types";
 import CircularProgress from "@material-ui/core/CircularProgress/CircularProgress";
@@ -57,7 +58,7 @@ function CardItem(props) {
   }
 
   return (
-    <Card className={'Card'} onClick={onClick}>
+    <Card className={"Card"} onClick={onClick}>
       {children}
     </Card>
   );

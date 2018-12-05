@@ -1,6 +1,7 @@
-import React from 'react';
-import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
-import '../../styles/Drawer.css';
+/* eslint-disable no-unused-vars */
+import React from "react";
+import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
+import "../../styles/Drawer.css";
 import DrawerHeader from "../presentational/DrawerHeader";
 import DrawerList from "../presentational/DrawerList";
 import PropTypes from "prop-types";

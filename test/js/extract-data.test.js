@@ -1,5 +1,5 @@
-import extractData from "../src/js/data-fetch/data-extract";
-import mockData from "../src/js/data-fetch/mock-data";
+import extractData from "../../src/js/data-fetch/data-extract";
+import mockData from "../../src/js/data-fetch/mock-data";
 
 test('extract the mock data', ()=> {
   const id = "471d4732a9fe198100affbf655e59172";

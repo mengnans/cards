@@ -14,40 +14,40 @@ const extractData = (data, id) => {
     return null;
   }
   drawerListData.push({
-    'label': 'Assigned to',
-    'description' : selectedData.coreData.assignee,
+    "label": "Assigned to",
+    "description" : selectedData.coreData.assignee,
   });
   drawerListData.push({
-    'label': 'Short description',
-    'description' : selectedData.coreData.shortDescription,
+    "label": "Short description",
+    "description" : selectedData.coreData.shortDescription,
   });
   drawerListData.push({
-    'label': 'Application',
-    'description' : selectedData.coreData.application,
+    "label": "Application",
+    "description" : selectedData.coreData.application,
   });
   drawerListData.push({
-    'label': 'made_sla',
-    'description' : selectedData.serviceData.made_sla,
+    "label": "made_sla",
+    "description" : selectedData.serviceData.made_sla,
   });
   drawerListData.push({
-    'label': 'upon_reject',
-    'description' : selectedData.serviceData.upon_reject,
+    "label": "upon_reject",
+    "description" : selectedData.serviceData.upon_reject,
   });
   drawerListData.push({
-    'label': 'opened_by',
-    'description' : selectedData.serviceData.opened_by,
+    "label": "opened_by",
+    "description" : selectedData.serviceData.opened_by,
   });
   drawerListData.push({
-    'label': 'priority',
-    'description' : selectedData.serviceData.priority,
+    "label": "priority",
+    "description" : selectedData.serviceData.priority,
   });
   drawerListData.push({
-    'label': 'activity_due',
-    'description' : selectedData.serviceData.activity_due,
+    "label": "activity_due",
+    "description" : selectedData.serviceData.activity_due,
   });
   drawerListData.push({
-    'label': 'approval',
-    'description' : selectedData.serviceData.approval,
+    "label": "approval",
+    "description" : selectedData.serviceData.approval,
   });
 
   extractedData.drawerListData = drawerListData;

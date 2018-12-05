@@ -1,6 +1,6 @@
-import generateUrlParams from "../src/js/data-fetch/url-params-generator";
-import {get} from "../src/js/data-fetch/data-fetch";
-import {BACKEND_URL} from "../src/js/constants/data-fetch-constant";
+import generateUrlParams from "../../src/js/data-fetch/url-params-generator";
+import {get} from "../../src/js/data-fetch/data-fetch";
+import {BACKEND_URL} from "../../src/js/constants/constant";
 
 test('fetch the data from backend', async () => {
   let page = 0;

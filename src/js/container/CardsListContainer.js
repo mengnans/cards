@@ -1,11 +1,13 @@
-import React from 'react';
+/* eslint-disable indent */
+/* eslint-disable no-unused-vars */
+import React from "react";
 import connect from "react-redux/es/connect/connect";
 import {toggleDrawer} from "../actions/actions";
 import CardsList from "../presentational/CardsList";
 import PropTypes from "prop-types";
 
 const mapStateToProps = state => {
-  return {currentPageData: state.currentPageData,}
+  return {currentPageData: state.currentPageData,};
 };
 
 const mapDispatchToProps = dispatch => {

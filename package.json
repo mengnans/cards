@@ -4,6 +4,8 @@
   "private": true,
   "dependencies": {
     "@material-ui/core": "^3.6.1",
+    "eslint": "^5.9.0",
+    "eslint-config-standard": "^12.0.0",
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
     "react-lines-ellipsis": "^0.13.2",
@@ -15,6 +17,8 @@
   "scripts": {
     "start": "webpack-dev-server --open --mode development",
     "build": "webpack --mode production",
+    "lint-fix": "eslint --fix ./src/js/*/*.js",
+    "lint": "eslint ./src/js/*/*.js",
     "test": "jest",
     "test:watch": "jest --watch",
     "eject": "react-scripts eject"
@@ -26,7 +30,11 @@
     "setupTestFrameworkScriptFile": "<rootDir>/test/setup/setupEnzyme.js",
     "testPathIgnorePatterns": [
       "<rootDir>/test/setup/"
-    ]
+    ],
+    "moduleNameMapper": {
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/test/mock/fileMock.js",
+      "\\.(css|less)$": "<rootDir>/test/mock/styleMock.js"
+    }
   },
   "browserslist": [
     ">0.2%",
@@ -45,9 +53,11 @@
     "enzyme": "^3.7.0",
     "enzyme-adapter-react-16": "^1.7.0",
     "enzyme-to-json": "^3.3.4",
+    "eslint-plugin-react": "^7.11.1",
     "file-loader": "^2.0.0",
     "html-loader": "^0.5.5",
     "html-webpack-plugin": "^3.2.0",
+    "identity-obj-proxy": "^3.0.0",
     "jest": "^23.6.0",
     "prop-types": "^15.6.2",
     "sass-loader": "^7.1.0",

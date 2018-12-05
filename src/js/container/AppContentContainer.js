@@ -1,16 +1,17 @@
-import React, {Component} from 'react';
-import '../../styles/AppContent.css';
+/* eslint-disable no-unused-vars */
+import React, {Component} from "react";
+import "../../styles/AppContent.css";
 import {initialLoad, load, removeIsRecentlyLoadedFlag} from "../actions/actions";
 import {connect} from "react-redux";
 import AppContent from "../presentational/AppContent";
-import {DATA_PER_PAGE, RE_LOAD_INTERVAL} from "../constants/data-fetch-constant";
+import {DATA_PER_PAGE, RE_LOAD_INTERVAL} from "../constants/constant";
 import PropTypes from "prop-types";
 
 const mapStateToProps = state => {
   return {
     currentPageData: state.currentPageData,
     totalPage: state.totalPage,
-  }
+  };
 };
 
 const mapDispatchToProps = dispatch => {

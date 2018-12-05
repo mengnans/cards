@@ -1,7 +1,8 @@
+/* eslint-disable no-unused-vars */
 import React from "react";
 import Grid from "@material-ui/core/Grid/Grid";
-import '../../styles/DrawerHeader.css'
-import {withStyles} from '@material-ui/core/styles';
+import "../../styles/DrawerHeader.css";
+import {withStyles} from "@material-ui/core/styles";
 import PropTypes from "prop-types";
 
 const styles = {

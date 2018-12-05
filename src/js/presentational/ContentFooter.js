@@ -1,7 +1,8 @@
+/* eslint-disable no-unused-vars */
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button/Button";
 import React from "react";
-import "../../styles/ContentFooter.css"
+import "../../styles/ContentFooter.css";
 import PropTypes from "prop-types";
 
 function ContentFooter(props) {
@@ -29,7 +30,7 @@ function ContentFooter(props) {
         <Button disabled={nextButtonDisabled} onClick={onClickNext}>Next</Button>
       </Grid>
     </Grid>
-  )
+  );
 }
 
 ContentFooter.propTypes = {

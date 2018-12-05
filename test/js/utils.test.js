@@ -1,5 +1,5 @@
-import {DATA_PER_PAGE} from "../src/js/constants/data-fetch-constant";
-import {calcTotalPage, createInitialPageData} from "../src/js/utils/utils";
+import {DATA_PER_PAGE} from "../../src/js/constants/constant";
+import {calcTotalPage, createInitialPageData, generateRandomInteger, getDataFromCache} from "../../src/js/utils/utils";
 
 test('calc the correct total page', () => {
   let totalPage1 = calcTotalPage(3024, DATA_PER_PAGE);
@@ -21,13 +21,15 @@ test('create the correct page data object', () => {
 
 test('the getDataFromCache function works properly', () => {
   let cache = [];
-  let luckyPageNumber = 5;
+  let cacheLength = generateRandomInteger(5,20);
+  let luckyPageNumber = generateRandomInteger(1, cacheLength);
   let dataFromCache;
-  for (let page = 1; page < 10; page++) {
+  for (let page = 1; page <= cacheLength; page++) {
     let pageData = createInitialPageData(page);
 
     cache.push(pageData);
   }
-  dataFromCache = dataFromCache(luckyPageNumber, cache);
+  dataFromCache = getDataFromCache(luckyPageNumber, cache);
   expect(dataFromCache.page).toBe(luckyPageNumber);
+  expect(dataFromCache.isRecentlyReLoaded).toBeFalsy();
 });

@@ -1,3 +1,5 @@
+/* eslint-disable indent */
+/* eslint-disable no-console */
 import {
   INITIAL_LOAD_FULFILLED,
   INITIAL_LOAD_PENDING,
@@ -7,7 +9,7 @@ import {
   PAGE_CHANGE, REMOVE_IS_RECENTLY_RE_LOADED,
   TOGGLE_DRAWER
 } from "../constants/action-types";
-import {DATA_PER_PAGE, MAX_CACHE_LENGTH, MAX_RE_LOAD_DISTANCE} from "../constants/data-fetch-constant";
+import {DATA_PER_PAGE, MAX_CACHE_LENGTH} from "../constants/constant";
 import {calcTotalPage, createInitialPageData, getDataFromCache, reLoadedData} from "../utils/utils";
 
 
@@ -26,7 +28,7 @@ const appReducer = (state = defaultState, action) => {
   console.log(action.type);
 
   switch (action.type) {
-    case TOGGLE_DRAWER:{
+    case TOGGLE_DRAWER: {
       return {...state, selectedId: action.payload};
     }
 
@@ -66,17 +68,17 @@ const appReducer = (state = defaultState, action) => {
     }
 
     case REMOVE_IS_RECENTLY_RE_LOADED: {
-      let cache = [... state.cache];
+      let cache = [...state.cache];
       let currentPageData = {...state.currentPageData};
       let pageToRemove = action.payload;
       let pageData;
       pageData = getDataFromCache(pageToRemove, cache);
-      if(pageData){
+      if (pageData) {
         pageData.isRecentlyReLoaded = false;
-      } else if(pageToRemove === currentPageData.page) {
+      } else if (pageToRemove === currentPageData.page) {
         currentPageData.isRecentlyReLoaded = false;
       }
-      return {...state, currentPageData: currentPageData, cache: cache}
+      return {...state, currentPageData: currentPageData, cache: cache};
     }
 
     case INITIAL_LOAD_PENDING: {
@@ -138,17 +140,17 @@ const appReducer = (state = defaultState, action) => {
         cache[i].isLoading = false;
       }
       currentPageData.isLoading = false;
-      return {...state, currentPageData: currentPageData, cache: cache}
+      return {...state, currentPageData: currentPageData, cache: cache};
     }
 
     case LOAD_PENDING: {
       let currentPageData = {...state.currentPageData};
       currentPageData.isLoading = true;
       currentPageData.attemptTimes++;
-      if(currentPageData.attemptTimes > 1){
+      if (currentPageData.attemptTimes > 1) {
         currentPageData.isRecentlyReLoaded = true;
       }
-      return {...state, currentPageData: currentPageData}
+      return {...state, currentPageData: currentPageData};
     }
 
     case LOAD_FULFILLED: {
@@ -171,7 +173,7 @@ const appReducer = (state = defaultState, action) => {
         }
       }
       totalPage = calcTotalPage(totalItemNumber, DATA_PER_PAGE);
-      return {...state, currentPageData: currentPageData, cache: cache, totalPage: totalPage.toString()}
+      return {...state, currentPageData: currentPageData, cache: cache, totalPage: totalPage.toString()};
     }
 
     case LOAD_REJECTED: {
@@ -193,7 +195,7 @@ const appReducer = (state = defaultState, action) => {
           cachedPageData.isLoading = false;
         }
       }
-      return {...state, currentPageData: currentPageData, cache: cache}
+      return {...state, currentPageData: currentPageData, cache: cache};
     }
 
     default:

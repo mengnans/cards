@@ -1,5 +1,6 @@
-import React, {Component} from 'react';
-import '../../styles/AppContent.css';
+/* eslint-disable no-unused-vars */
+import React from "react";
+import "../../styles/AppContent.css";
 import CardsListContainer from "../container/CardsListContainer";
 import Grid from "@material-ui/core/Grid";
 import DrawerContainer from "../container/DrawerContainer";

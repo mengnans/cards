@@ -1,8 +1,9 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import LinesEllipsis from 'react-lines-ellipsis'
+/* eslint-disable no-unused-vars */
+import React from "react";
+import PropTypes from "prop-types";
+import LinesEllipsis from "react-lines-ellipsis";
 
-const ellipsis = '...';
+const ellipsis = "...";
 
 function Line(props) {
   let {text, maxLine} = props;
