@@ -4,13 +4,19 @@ import {
   INITIAL_LOAD_FULFILLED,
   INITIAL_LOAD_PENDING,
   INITIAL_LOAD_REJECTED,
-  LOAD_FULFILLED,
+  LOAD_FULFILLED, LOAD_MORE_CACHE,
   LOAD_PENDING, LOAD_REJECTED,
   PAGE_CHANGE, REMOVE_IS_RECENTLY_RE_LOADED,
   TOGGLE_DRAWER
 } from "../constants/action-types";
 import {DATA_PER_PAGE, MAX_CACHE_LENGTH} from "../constants/constant";
-import {calcTotalPage, createInitialPageData, getDataFromCache, reLoadedData} from "../utils/utils";
+import {
+  calcTotalPage,
+  createInitialPageData,
+  getDataFromCache,
+  reLoadedData,
+  shrinkCacheIfNeeded
+} from "../utils/utils";
 
 
 const defaultState = {
@@ -56,9 +62,7 @@ const appReducer = (state = defaultState, action) => {
       // if current page data is not in the cache
       if (!currentPageDataFromCache) {
         cache.push(state.currentPageData);
-        if (cache.length > MAX_CACHE_LENGTH) {
-          cache.shift();
-        }
+        shrinkCacheIfNeeded(cache, MAX_CACHE_LENGTH);
       }
       return {
         ...state,
@@ -157,23 +161,39 @@ const appReducer = (state = defaultState, action) => {
       let fetchedData = action.payload.data;
       let totalItemNumber = action.payload.totalItemNumber;
       let fetchedDataParams = action.payload.params;
-      let fetchedDataPage = fetchedDataParams.page + 1;
+      // the first page loaded, and the last page loaded
+      let startPage, endPage;
+      let paramPage = fetchedDataParams.page;
+      let pageLoadedNumber = fetchedDataParams.perPage / DATA_PER_PAGE;
       let currentPageData = {...state.currentPageData};
       let cache = [...state.cache];
       let totalPage;
-      if (fetchedDataPage === currentPageData.page) {
-        currentPageData.isLoading = false;
-        currentPageData.data = fetchedData;
-      } else {
-        let cachePageData = getDataFromCache(fetchedDataPage, cache);
-        // if it's in the cache
-        if (cachePageData) {
-          cachePageData.isLoading = false;
-          cachePageData.data = fetchedData;
+
+      startPage = paramPage * pageLoadedNumber + 1;
+      endPage = startPage + pageLoadedNumber - 1;
+      console.log("page " + paramPage);
+      console.log("perPage" + fetchedDataParams.perPage);
+      console.log("start" + startPage);
+      console.log("end" + endPage);
+
+      for (let i = startPage; i <= endPage; i++) {
+        let singlePageData = fetchedData.slice((i - startPage) * DATA_PER_PAGE, (i - startPage + 1) * DATA_PER_PAGE);
+        if (i === currentPageData.page) {
+          currentPageData.isLoading = false;
+          currentPageData.data = singlePageData;
+        } else {
+          let cachePageData = getDataFromCache(i, cache);
+          // if it's in the cache
+          if (cachePageData) {
+            cachePageData.isLoading = false;
+            cachePageData.data = singlePageData;
+          }
         }
       }
+
       totalPage = calcTotalPage(totalItemNumber, DATA_PER_PAGE);
       return {...state, currentPageData: currentPageData, cache: cache, totalPage: totalPage.toString()};
+
     }
 
     case LOAD_REJECTED: {
@@ -182,6 +202,7 @@ const appReducer = (state = defaultState, action) => {
       let fetchedDataParams = action.payload;
       let fetchedDataPage = fetchedDataParams.page + 1;
       let cache = [...state.cache];
+
       // if it's the current page
       if (fetchedDataPage === currentPage) {
         // set isLoading is false
@@ -196,6 +217,24 @@ const appReducer = (state = defaultState, action) => {
         }
       }
       return {...state, currentPageData: currentPageData, cache: cache};
+    }
+
+    case LOAD_MORE_CACHE: {
+      let {startPage, endPage} = action.payload;
+      let cache = [...state.cache];
+      let currentPageData = {...state.currentPageData};
+      let currentPageNumber = currentPageData.page;
+      console.log("SSS " + startPage );
+      console.log("EEE" + endPage);
+      console.log(cache);
+      for (let i = startPage; i <= endPage; i++) {
+        let pageData = createInitialPageData(i);
+        pageData.isLoading = true;
+        cache.push(pageData);
+        shrinkCacheIfNeeded(cache, MAX_CACHE_LENGTH, true, currentPageNumber);
+      }
+      console.log(cache);
+      return {...state, cache: cache};
     }
 
     default:
