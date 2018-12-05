@@ -5,7 +5,7 @@ import connect from "react-redux/es/connect/connect";
 import {pageChange} from "../actions/actions";
 
 const mapStateToProps = state => {
-  return {currentPage: state.currentPage, totalPage: state.totalPage,}
+  return {currentPage: state.currentPageData.page, totalPage: state.totalPage,}
 };
 
 const mapDispatchToProps = dispatch => {

@@ -7,8 +7,7 @@ import {
 import {DATA_PER_PAGE} from "../constants/data-fetch-constant";
 
 const defaultState = {
-  currentPageData: null,
-  currentPage: 1,
+  currentPageData: {isLoading: true, page: 1, data: null},
   totalPage: "?",
   forwardCache: [],
   backwardCache: [],
@@ -16,77 +15,52 @@ const defaultState = {
   selectedId: null,
 };
 
+const getDataFromCache = (page, cache) => {
+    for (let i = 0; i < cache.length; i++) {
+      if (cache[i].page === page) {
+        return cache[i];
+      }
+    }
+    return null;
+  }
+;
+
 const rootReducer = (state = defaultState, action) => {
 
   switch (action.type) {
     case TOGGLE_DRAWER:
       return {...state, selectedId: action.payload};
     case PAGE_CHANGE: {
-      let currentPage = state.currentPage;
+      let currentPage = state.currentPageData.page;
       let nextPage = action.payload;
       let backwardCache = [...state.backwardCache];
       let forwardCache = [...state.forwardCache];
+      let combinedCache = [...backwardCache, ...forwardCache]
       let isForward = false;
       if (nextPage > currentPage) {
         isForward = true;
       }
-      // cache the old data
-      let isCached = false;
-      if (isForward) {
-        for (let i = 0; i < backwardCache.length; i++) {
-          // current page is already cached
-          if (backwardCache[i].page === currentPage) {
-            isCached = true;
-            break;
-          }
-        }
-        // if the data is not cached
-        if (!isCached) {
-          let newCache = {};
-          newCache.data = state.currentPageData;
-          newCache.isLoading = false;
-          newCache.page = currentPage;
-          backwardCache.push(newCache);
-        }
+      let nextPageData = getDataFromCache(nextPage, combinedCache);
+      if (nextPageData) {
+
       } else {
-        for (let i = 0; i < forwardCache.length; i++) {
-          // current page is already cached
-          if (forwardCache[i].page === currentPage) {
-            isCached = true;
-            break;
-          }
-        }
-        // if the data is not cached
-        if (!isCached) {
-          let newCache = {};
-          newCache.data = state.currentPageData;
-          newCache.isLoading = false;
-          newCache.page = currentPage;
-          forwardCache.push(newCache);
-        }
+        //TODO: dispatch a get action to load more data
+        nextPageData = {};
+        nextPageData.page = nextPage;
+        nextPageData.data = null;
+        nextPageData.isLoading = true;
       }
-      // get the new data from cache
-      let nextPageData = null;
-      if (isForward) {
-        for (let i = 0; i < forwardCache.length; i++) {
-          // current page is already cached
-          if (forwardCache[i].page === nextPage) {
-            nextPageData = forwardCache[i].data;
-            break;
-          }
-        }
-      } else {
-        for (let i = 0; i < backwardCache.length; i++) {
-          // current page is already cached
-          if (backwardCache[i].page === nextPage) {
-            nextPageData = backwardCache[i].data;
-            break;
-          }
-        }
+
+      let currentPageDataFromCache = getDataFromCache(currentPage, combinedCache);
+      // if it's not in the cache
+      if (!currentPageDataFromCache) {
+        let cacheItem = {};
+        cacheItem.page = currentPage;
+        cacheItem.data = state.currentPageData;
+        cacheItem.isLoding = false;
       }
       return {
         ...state,
-        currentPage: nextPage,
         currentPageData: nextPageData,
         forwardCache: forwardCache,
         backwardCache: backwardCache
@@ -99,21 +73,24 @@ const rootReducer = (state = defaultState, action) => {
       let fetchedData = action.payload.data;
       let totalItemNumber = action.payload.totalItemNumber;
       let totalPage;
-      let pageData = fetchedData.slice(0, DATA_PER_PAGE);
-      let forwardData = fetchedData.slice(DATA_PER_PAGE);
+      let currentPageData = {}
+      let fetchedCurrentPageData = fetchedData.slice(0, DATA_PER_PAGE);
+      let fetchedForwardData = fetchedData.slice(DATA_PER_PAGE);
       let forwardCache = [];
-      for (let i = 0; i < forwardData.length; i++) {
+      for (let i = 0; i < fetchedForwardData.length; i++) {
         forwardCache[i] = {};
         forwardCache[i].page = i + 2;
-        forwardCache[i].data = forwardData.slice(i * DATA_PER_PAGE, (i + 1) * DATA_PER_PAGE);
+        forwardCache[i].data = fetchedForwardData.slice(i * DATA_PER_PAGE, (i + 1) * DATA_PER_PAGE);
         forwardCache[i].isLoading = false;
       }
+      currentPageData.page = 1;
+      currentPageData.data = fetchedCurrentPageData;
+      currentPageData.isLoading = false;
       totalPage = Math.round(totalItemNumber / DATA_PER_PAGE) + 1;
       return {
         ...state,
         totalPage: totalPage.toString(),
-        currentPage: 1,
-        currentPageData: pageData,
+        currentPageData: currentPageData,
         forwardCache: forwardCache
       };
     }

@@ -23,7 +23,7 @@ class CardsListContainer extends React.Component {
   render() {
     return (
       <CardsList
-        currentPageData={this.props.currentPageData}
+        currentPageData={this.props.currentPageData.data}
         onCardClick={(id) => this.onCardClick(id)}
       />
     );
@@ -31,7 +31,7 @@ class CardsListContainer extends React.Component {
 }
 
 CardsListContainer.propTypes = {
-  currentPageData: PropTypes.array,
+  currentPageData: PropTypes.object,
 };
 
 const ConnectedCardsListContainer = connect(mapStateToProps, mapDispatchToProps)(CardsListContainer);

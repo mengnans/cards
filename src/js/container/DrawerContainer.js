@@ -6,7 +6,7 @@ import Drawer from "../presentational/Drawer";
 import {toggleDrawer} from "../actions/actions";
 
 const mapStateToProps = state => {
-  return {currentPageData: state.currentPageData, id: state.selectedId}
+  return {currentPageData: state.currentPageData.data, id: state.selectedId}
 };
 
 const mapDispatchToProps = dispatch => {
