@@ -17,8 +17,14 @@ class CardsList extends React.Component {
     const spacing = 16;
     let children = TWELWE_ARRAY.map((value, index) => {
       let coreData;
-      if(!this.props.isLoading){
-        coreData =  this.props.pageData[index].coreData;
+      let noData = false;
+      if (!this.props.isLoading) {
+        if (this.props.pageData[index]) {
+          coreData = this.props.pageData[index].coreData;
+        } else {
+          noData = true;
+        }
+
       }
       return (
         <Grid key={index} item>
@@ -26,7 +32,8 @@ class CardsList extends React.Component {
                     onClick={() => this.props.onCardClick(coreData.id)}
                     isLoading={this.props.isLoading}
                     loadingInfo={this.props.loadingInfo}
-                    progressBarColor={this.props.progressBarColor}/>
+                    progressBarColor={this.props.progressBarColor}
+                    noData={noData}/>
         </Grid>
       )
     });

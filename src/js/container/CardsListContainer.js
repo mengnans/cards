@@ -21,12 +21,12 @@ class CardsListContainer extends React.Component {
   }
 
   render() {
-    let isLoading = this.props.currentPageData.isLoading;
-    let reconnectTimes = this.props.currentPageData.reconnectTimes;
+    let isLoading = !this.props.currentPageData.data;
+    let attemptTimes = this.props.currentPageData.attemptTimes;
     let progressBarColor = "primary";
     let loadingInfo = "Loading";
     if (isLoading) {
-      if (reconnectTimes > 0) {
+      if (attemptTimes > 1) {
         progressBarColor = "secondary";
         loadingInfo = "Re-connecting";
       }

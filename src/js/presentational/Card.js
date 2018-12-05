@@ -14,37 +14,47 @@ class CardItem extends React.Component {
 
   render() {
     const coreData = this.props.coreData;
+    let children;
+    if (this.props.noData) {
+      children =
+        <div className="Card-loading-div">
+          <div className="Card-loading-info">
+            No data
+          </div>
+        </div>;
+    } else{
 
-    let children = this.props.isLoading ?
-      <div className="Card-loading-div">
-        <div className="Card-loading-info">
-          {this.props.loadingInfo}
+      children = this.props.isLoading ?
+        <div className="Card-loading-div">
+          <div className="Card-loading-info">
+            {this.props.loadingInfo}
+          </div>
+          <CircularProgress className="Card-loading-progress" color={this.props.progressBarColor} size={80}/>
         </div>
-        <CircularProgress className="Card-loading-progress" color={this.props.progressBarColor} size={80}/>
-      </div>
-      :
-      <div>
-        <CardContent>
-          <Typography color="textSecondary" gutterBottom>
-            New
-          </Typography>
-          <Typography variant="h5" component="h2">
-            <Line text={coreData.number} maxLine={1}/>
-          </Typography>
-          <Typography component="div" color="textSecondary">
-            <Line text={"Application: " + coreData.application} maxLine={1}/>
-          </Typography>
-          <Typography component="div" color="textSecondary">
-            <Line text={"Assignee: " + coreData.assignee} maxLine={1}/>
-          </Typography>
-          <Typography component="div" className={"Description"}>
-            <Line text={coreData.shortDescription} maxLine={2}/>
-          </Typography>
-        </CardContent>
-        <CardActions>
-          <Button size="small">Learn More</Button>
-        </CardActions>
-      </div>;
+        :
+        <div>
+          <CardContent>
+            <Typography color="textSecondary" gutterBottom>
+              New
+            </Typography>
+            <Typography variant="h5" component="h2">
+              <Line text={coreData.number} maxLine={1}/>
+            </Typography>
+            <Typography component="div" color="textSecondary">
+              <Line text={"Application: " + coreData.application} maxLine={1}/>
+            </Typography>
+            <Typography component="div" color="textSecondary">
+              <Line text={"Assignee: " + coreData.assignee} maxLine={1}/>
+            </Typography>
+            <Typography component="div" className={"Description"}>
+              <Line text={coreData.shortDescription} maxLine={2}/>
+            </Typography>
+          </CardContent>
+          <CardActions>
+            <Button size="small">Learn More</Button>
+          </CardActions>
+        </div>;
+    }
 
     return (
       <Card className={'Card'} onClick={this.props.onClick}>
@@ -60,6 +70,7 @@ CardItem.propTypes = {
   isLoading: PropTypes.bool.isRequired,
   progressBarColor: PropTypes.string.isRequired,
   loadingInfo: PropTypes.string.isRequired,
+  noData: PropTypes.bool.isRequired,
 };
 
 export default CardItem;

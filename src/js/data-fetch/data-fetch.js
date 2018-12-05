@@ -28,6 +28,7 @@ export const get = (url = '', params = {}) => {
             let dataFetched = {};
             dataFetched.data = result;
             dataFetched.totalItemNumber = totalItemNumber;
+            dataFetched.params = params;
             resolve(dataFetched);
           } else {
             console.log(result.data || 'fetching data failed');

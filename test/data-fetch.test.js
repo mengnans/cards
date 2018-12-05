@@ -13,5 +13,4 @@ test('fetch the data from backend', async () => {
   });
   // the id of first data is 471d4732a9fe198100affbf655e59172
   expect(dataFetched.data[0].coreData.id).toBe("471d4732a9fe198100affbf655e59172");
-
 });
