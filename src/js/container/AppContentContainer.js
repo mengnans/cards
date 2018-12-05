@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import '../../styles/AppContent.css';
-import {initialLoad, load} from "../actions/actions";
+import {initialLoad, load, removeIsRecentlyLoadedFlag} from "../actions/actions";
 import {connect} from "react-redux";
 import AppContent from "../presentational/AppContent";
-import {DATA_PER_PAGE} from "../constants/data-fetch-constant";
+import {DATA_PER_PAGE, RE_LOAD_INTERVAL} from "../constants/data-fetch-constant";
 import PropTypes from "prop-types";
 
 const mapStateToProps = state => {
@@ -17,6 +17,7 @@ const mapDispatchToProps = dispatch => {
   return {
     initialLoad: (page, dataPerPage) => dispatch(initialLoad(page, dataPerPage)),
     load: (page, dataPerPage) => dispatch(load(page, dataPerPage)),
+    removeIsRecentlyLoadedFlag: (pageToRemove) => dispatch(removeIsRecentlyLoadedFlag(pageToRemove)),
   };
 };
 
@@ -29,16 +30,27 @@ class AppContentContainer extends Component {
   }
 
   componentWillReceiveProps(nextProps, nextContext) {
-    let {currentPageData, load, initialLoad, totalPage} = nextProps;
+    let {currentPageData, load, initialLoad, totalPage, removeIsRecentlyLoadedFlag} = nextProps;
     let page = currentPageData.page - 1;
 
     // if no total page and it's not loading, it means the initial load has failed
-    if (totalPage === "?" && !currentPageData.isLoading) {
+    // also only load the data when the data is not recently loaded
+    if (totalPage === "?" && !currentPageData.isLoading && !currentPageData.isRecentlyReLoaded) {
       initialLoad(0, 5 * DATA_PER_PAGE);
+      // the reload can only occur once every 5 seconds
+      setTimeout(()=>removeIsRecentlyLoadedFlag(currentPageData.page), RE_LOAD_INTERVAL * 1000);
     }
     // if no data and it's not loading, then load it
-    else if (!currentPageData.data && !currentPageData.isLoading) {
+    // also only load the data when the data is not recently loaded
+    else if (!currentPageData.data && !currentPageData.isLoading && !currentPageData.isRecentlyReLoaded) {
       load(page, DATA_PER_PAGE);
+      // if it's not the first time to load the data
+      // then it's a reload
+      // the reload can only occur once every 5 seconds
+      if(currentPageData.attemptTimes >= 1){
+        setTimeout(()=>removeIsRecentlyLoadedFlag(currentPageData.page), RE_LOAD_INTERVAL * 1000);
+
+      }
     }
   }
 
@@ -53,6 +65,7 @@ AppContentContainer.propTypes = {
   totalPage: PropTypes.string.isRequired,
   currentPageData: PropTypes.object.isRequired,
   initialLoad: PropTypes.func.isRequired,
+  removeIsRecentlyLoadedFlag: PropTypes.func.isRequired,
   load: PropTypes.func.isRequired,
 };
 

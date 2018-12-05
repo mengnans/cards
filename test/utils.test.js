@@ -21,12 +21,13 @@ test('create the correct page data object', () => {
 
 test('the getDataFromCache function works properly', () => {
   let cache = [];
+  let luckyPageNumber = 5;
+  let dataFromCache;
   for (let page = 1; page < 10; page++) {
     let pageData = createInitialPageData(page);
 
     cache.push(pageData);
   }
-  expect(pageData.page).toBe(page);
-  expect(pageData.isLoading).toBeFalsy();
-  expect(pageData.data).toBe(null);
+  dataFromCache = dataFromCache(luckyPageNumber, cache);
+  expect(dataFromCache.page).toBe(luckyPageNumber);
 });
