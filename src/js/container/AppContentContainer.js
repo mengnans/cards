@@ -8,6 +8,7 @@ import {DATA_PER_PAGE} from "../constants/data-fetch-constant";
 const mapStateToProps = state => {
   return {
     currentPageData: state.currentPageData,
+    totalPage: state.totalPage,
   }
 };
 
@@ -28,11 +29,15 @@ class AppContentContainer extends Component {
   }
 
   componentWillReceiveProps(props, state) {
-    let currentPageData = props.currentPageData;
+    let {currentPageData, load, totalPage} = props;
     let page = currentPageData.page - 1;
-    // if no data
-    if(!currentPageData.data && !currentPageData.isLoading) {
-      this.props.load(page, DATA_PER_PAGE);
+    // if no total page and it's not loading, it means the initial load has failed
+    if (totalPage === "?" && !currentPageData.isLoading) {
+      this.props.initialLoad(0, 5 * DATA_PER_PAGE);
+    }
+    // if no data, then load it
+    else if (!currentPageData.data && !currentPageData.isLoading) {
+      load(page, DATA_PER_PAGE);
     }
   }
 

@@ -14,28 +14,17 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-class ContentFooterContainer extends React.Component {
-
-  onClickNext() {
-    this.props.pageChange(this.props.currentPage + 1);
-  }
-
-  onClickBack() {
-    this.props.pageChange(this.props.currentPage - 1);
-  }
-
-
-  render() {
-    return (
-      <ContentFooter
-        totalPage={this.props.totalPage}
-        currentPage={this.props.currentPage}
-        onClickNext={this.onClickNext.bind(this)}
-        onClickBack={this.onClickBack.bind(this)}
-      />
-    )
-  }
-}
+const ContentFooterContainer = (props) => {
+  let {totalPage, currentPage, pageChange} = props;
+  return (
+    <ContentFooter
+      totalPage={totalPage}
+      currentPage={currentPage}
+      onClickNext={() => pageChange(currentPage + 1)}
+      onClickBack={() => pageChange(currentPage - 1)}
+    />
+  )
+};
 
 const ConnectedContentFooterContainer = connect(mapStateToProps, mapDispatchToProps)(ContentFooterContainer);
 

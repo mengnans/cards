@@ -3,15 +3,15 @@ import {
   INITIAL_LOAD_PENDING,
   INITIAL_LOAD_REJECTED,
   LOAD_FULFILLED,
-  LOAD_PENDING,
+  LOAD_PENDING, LOAD_REJECTED,
   PAGE_CHANGE,
   RE_LOAD_FULFILLED,
   RE_LOAD_PENDING,
   RE_LOAD_REJECTED,
   TOGGLE_DRAWER
 } from "../constants/action-types";
-import {DATA_PER_PAGE, MAX_CACHE_LENGTH} from "../constants/data-fetch-constant";
-import {createInitialPageData, getDataFromCache} from "../utils/utils";
+import {DATA_PER_PAGE, MAX_CACHE_LENGTH, MAX_RE_LOAD_DISTANCE} from "../constants/data-fetch-constant";
+import {calcTotalPage, createInitialPageData, getDataFromCache} from "../utils/utils";
 
 
 const defaultState = {
@@ -23,6 +23,7 @@ const defaultState = {
 };
 
 const rootReducer = (state = defaultState, action) => {
+  console.log(action.type);
 
   switch (action.type) {
     case TOGGLE_DRAWER:
@@ -35,6 +36,8 @@ const rootReducer = (state = defaultState, action) => {
       // if next page is not in the cache
       if (!nextPageData) {
         nextPageData = createInitialPageData(nextPage);
+      } else {
+
       }
       let currentPageDataFromCache = getDataFromCache(currentPage, cache);
       // if current page is not in the cache
@@ -52,13 +55,26 @@ const rootReducer = (state = defaultState, action) => {
     }
 
     case INITIAL_LOAD_PENDING: {
-      let cache = new Array(5);
-      for (let i = 0; i < cache.length; i++) {
-        cache[i] = createInitialPageData(i + 1);
+      let cache = [...state.cache];
+      let currentPageData;
+      if (cache.length === 0) {
+        cache = new Array(5);
+        for (let i = 0; i < cache.length; i++) {
+          cache[i] = createInitialPageData(i + 1);
+          cache[i].isLoading = true;
+        }
+        // the first page for current page
+        // others for the cache
+        currentPageData = cache.shift();
+      } else {
+        for (let i = 0; i < cache.length; i++) {
+          cache[i].isLoading = true;
+          cache[i].attemptTimes++;
+        }
+        currentPageData = {...state.currentPageData};
+        currentPageData.isLoading = true;
+        currentPageData.attemptTimes++;
       }
-      // the first page for current page
-      // others for the cache
-      let currentPageData = cache.shift();
       return {...state, currentPageData: currentPageData, cache: cache};
     }
 
@@ -76,7 +92,7 @@ const rootReducer = (state = defaultState, action) => {
       }
       currentPageData.data = fetchedCurrentPageData;
       currentPageData.isLoading = false;
-      totalPage = Math.round(totalItemNumber / DATA_PER_PAGE) + 1;
+      totalPage = calcTotalPage(totalItemNumber, DATA_PER_PAGE);
 
       return {
         ...state,
@@ -86,19 +102,31 @@ const rootReducer = (state = defaultState, action) => {
       };
     }
 
+    case INITIAL_LOAD_REJECTED: {
+      let cache = [...state.cache];
+      let currentPageData = {...state.currentPageData};
+      for (let i = 0; i < cache.length; i++) {
+        cache[i].isLoading = false;
+      }
+      currentPageData.isLoading = false;
+      return {...state, currentPageData: currentPageData, cache: cache}
+    }
+
     case LOAD_PENDING: {
       let currentPageData = {...state.currentPageData};
       currentPageData.isLoading = true;
       currentPageData.attemptTimes++;
-      return {...state, currentPageData}
+      return {...state, currentPageData: currentPageData}
     }
 
     case LOAD_FULFILLED: {
       let fetchedData = action.payload.data;
+      let totalItemNumber = action.payload.totalItemNumber;
       let fetchedDataParams = action.payload.params;
       let fetchedDataPage = fetchedDataParams.page + 1;
       let currentPageData = {...state.currentPageData};
       let cache = [...state.cache];
+      let totalPage;
       if (fetchedDataPage === currentPageData.page) {
         currentPageData.isLoading = false;
         currentPageData.data = fetchedData;
@@ -108,6 +136,29 @@ const rootReducer = (state = defaultState, action) => {
         if (cachePageData) {
           cachePageData.isLoading = false;
           cachePageData.data = fetchedData;
+        }
+      }
+      totalPage = calcTotalPage(totalItemNumber, DATA_PER_PAGE);
+      return {...state, currentPageData: currentPageData, cache: cache, totalPage: totalPage.toString()}
+    }
+
+    case LOAD_REJECTED: {
+      let currentPageData = {...state.currentPageData};
+      let currentPage = currentPageData.page;
+      let fetchedDataParams = action.payload;
+      let fetchedDataPage = fetchedDataParams.page + 1;
+      let cache = [...state.cache];
+      // if it's the current page
+      if(fetchedDataPage === currentPage){
+        // set isLoading is false
+        // let the program know the loading is over
+        // so when program realizes the loading is over but no data is retrieved
+        // it will load the data again
+        currentPageData.isLoading = false;
+      } else{
+        let cachedPageData = getDataFromCache(fetchedDataPage, cache);
+        if(cachedPageData){
+          cachedPageData.isLoading = false;
         }
       }
       return {...state, currentPageData: currentPageData, cache: cache}
