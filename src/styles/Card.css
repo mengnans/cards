@@ -10,11 +10,13 @@
 }
 
 .Card-loading-div {
-  height: 100%;
+  text-align: center;
+}
+
+.Card-loading-info {
+  margin: 20px 0;
 }
 
 .Card-loading-progress {
   position:relative;
-  top:30%;
-  left:35%;
 }

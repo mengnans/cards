@@ -15,22 +15,21 @@ class CardsList extends React.Component {
 
   render() {
     const spacing = 16;
-
     let children = TWELWE_ARRAY.map((value, index) => {
-      let id, coreData, isLoading;
-      isLoading = true;
-      if(this.props.currentPageData && this.props.currentPageData[index]){
-        coreData = this.props.currentPageData[index].coreData;
-        id = coreData.id;
-        isLoading = false;
+      let coreData;
+      if(!this.props.isLoading){
+        coreData =  this.props.pageData[index].coreData;
       }
-      return(
+      return (
         <Grid key={index} item>
-          <CardItem data={coreData}
-                onClick={() => this.props.onCardClick(id)}
-                isLoading={isLoading}/>
+          <CardItem coreData={coreData}
+                    onClick={() => this.props.onCardClick(coreData.id)}
+                    isLoading={this.props.isLoading}
+                    loadingInfo={this.props.loadingInfo}
+                    progressBarColor={this.props.progressBarColor}/>
         </Grid>
-    )});
+      )
+    });
 
     return (
       <Grid item xs={12}>
@@ -43,8 +42,11 @@ class CardsList extends React.Component {
 }
 
 CardsList.propTypes = {
-  currentPageData: PropTypes.array,
-  onCardClick: PropTypes.func,
+  pageData: PropTypes.array,
+  onCardClick: PropTypes.func.isRequired,
+  isLoading: PropTypes.bool.isRequired,
+  loadingInfo: PropTypes.string.isRequired,
+  progressBarColor: PropTypes.string.isRequired,
 };
 
 export default withStyles(styles)(CardsList);

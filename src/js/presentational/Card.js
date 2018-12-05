@@ -13,10 +13,14 @@ import CircularProgress from "@material-ui/core/CircularProgress/CircularProgres
 class CardItem extends React.Component {
 
   render() {
-    const coreData = this.props.data;
+    const coreData = this.props.coreData;
+
     let children = this.props.isLoading ?
       <div className="Card-loading-div">
-        <CircularProgress className="Card-loading-progress" size={80}/>
+        <div className="Card-loading-info">
+          {this.props.loadingInfo}
+        </div>
+        <CircularProgress className="Card-loading-progress" color={this.props.progressBarColor} size={80}/>
       </div>
       :
       <div>
@@ -51,9 +55,11 @@ class CardItem extends React.Component {
 }
 
 CardItem.propTypes = {
-  data: PropTypes.object,
+  coreData: PropTypes.object,
   onClick: PropTypes.func,
   isLoading: PropTypes.bool.isRequired,
+  progressBarColor: PropTypes.string.isRequired,
+  loadingInfo: PropTypes.string.isRequired,
 };
 
 export default CardItem;

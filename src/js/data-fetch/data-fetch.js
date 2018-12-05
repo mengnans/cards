@@ -31,17 +31,17 @@ export const get = (url = '', params = {}) => {
             resolve(dataFetched);
           } else {
             console.log(result.data || 'fetching data failed');
-            reject();
+            reject(params);
           }
         },
         (err) => {
-          console.log('fetching data failed');
-          reject(err);
+          console.log(err);
+          reject(params);
         }
       )
       .catch((err) => {
-        console.log('fetching data failed');
-        reject(err);
+        console.log(err);
+        reject(params);
       });
   });
 };

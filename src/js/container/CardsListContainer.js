@@ -21,17 +21,30 @@ class CardsListContainer extends React.Component {
   }
 
   render() {
+    let isLoading = this.props.currentPageData.isLoading;
+    let reconnectTimes = this.props.currentPageData.reconnectTimes;
+    let progressBarColor = "primary";
+    let loadingInfo = "Loading";
+    if (isLoading) {
+      if (reconnectTimes > 0) {
+        progressBarColor = "secondary";
+        loadingInfo = "Re-connecting";
+      }
+    }
     return (
       <CardsList
-        currentPageData={this.props.currentPageData.data}
+        pageData={this.props.currentPageData.data}
         onCardClick={(id) => this.onCardClick(id)}
+        isLoading={isLoading}
+        progressBarColor={progressBarColor}
+        loadingInfo={loadingInfo}
       />
     );
   }
 }
 
 CardsListContainer.propTypes = {
-  currentPageData: PropTypes.object,
+  currentPageData: PropTypes.object.isRequired,
 };
 
 const ConnectedCardsListContainer = connect(mapStateToProps, mapDispatchToProps)(CardsListContainer);
