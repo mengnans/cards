@@ -24,12 +24,14 @@ class AppContentContainer extends Component {
 
   componentDidMount() {
     let {initialLoad} = this.props;
+
     initialLoad(0, 5 * DATA_PER_PAGE);
   }
 
   componentWillReceiveProps(nextProps, nextContext) {
     let {currentPageData, load, initialLoad, totalPage} = nextProps;
     let page = currentPageData.page - 1;
+
     // if no total page and it's not loading, it means the initial load has failed
     if (totalPage === "?" && !currentPageData.isLoading) {
       initialLoad(0, 5 * DATA_PER_PAGE);

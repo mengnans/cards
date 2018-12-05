@@ -10,6 +10,7 @@ function Drawer(props) {
   let {extractedData, isOpen, closeDrawer} = props;
   // no children elements when drawer is closed
   let children = isOpen ?
+
     <div className="Drawer">
       <DrawerHeader number={extractedData.number} onClickExit={() => closeDrawer()}/>
       <DrawerList drawerListData={extractedData.drawerListData} id={extractedData.id}/>

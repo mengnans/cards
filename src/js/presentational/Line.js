@@ -6,6 +6,7 @@ const ellipsis = '...';
 
 function Line(props) {
   let {text, maxLine} = props;
+
   return (
     <LinesEllipsis
       text={text}
@@ -15,7 +16,7 @@ function Line(props) {
       basedOn="words"
     />
   );
-};
+}
 
 Line.propTypes = {
   text: PropTypes.string.isRequired,

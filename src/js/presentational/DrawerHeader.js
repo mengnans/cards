@@ -12,6 +12,7 @@ const styles = {
 
 function drawerHeader(props) {
   let {number, onClickExit} = props;
+
   return (
     <Grid container className="Drawer-header">
       <Grid item xs={10}>

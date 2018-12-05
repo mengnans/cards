@@ -14,6 +14,7 @@ function CardItem(props) {
 
   let {coreData, noData, isLoading, onClick, progressBarColor, loadingInfo} = props;
   let children;
+
   if (noData) {
     children =
       <div className="Card-loading-div">

@@ -26,6 +26,7 @@ class CardsListContainer extends React.Component {
     let attemptTimes = currentPageData.attemptTimes;
     let progressBarColor = "primary";
     let loadingInfo = "Loading";
+
     if (isLoading) {
       if (attemptTimes > 1) {
         progressBarColor = "secondary";

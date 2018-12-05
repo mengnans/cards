@@ -8,6 +8,7 @@ function ContentFooter(props) {
 
   let {totalPage, currentPage, onClickBack, onClickNext} = props;
   let backButtonDisabled, nextButtonDisabled = false;
+
   // if it's the first page, disable the back button
   if (currentPage === 1) {
     backButtonDisabled = true;

@@ -21,6 +21,7 @@ class DrawerContainer extends React.Component {
   render() {
     let {currentPageData} = this.props;
     let isOpen, extractedData;
+
     if (!this.props.id) {
       isOpen = false;
     } else {

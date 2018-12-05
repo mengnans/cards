@@ -5,9 +5,6 @@ import {
   LOAD_FULFILLED,
   LOAD_PENDING, LOAD_REJECTED,
   PAGE_CHANGE,
-  RE_LOAD_FULFILLED,
-  RE_LOAD_PENDING,
-  RE_LOAD_REJECTED,
   TOGGLE_DRAWER
 } from "../constants/action-types";
 import {DATA_PER_PAGE, MAX_CACHE_LENGTH, MAX_RE_LOAD_DISTANCE} from "../constants/data-fetch-constant";
@@ -15,14 +12,17 @@ import {calcTotalPage, createInitialPageData, getDataFromCache} from "../utils/u
 
 
 const defaultState = {
+  // default current page data
   currentPageData: createInitialPageData(1),
+  // default total page is ?, since we ain't sure how many pages in total
   totalPage: "?",
+  // default empoty cache for the system
   cache: [],
-  //selected Id for drawer
+  // default null selected Id for the drawer
   selectedId: null,
 };
 
-const rootReducer = (state = defaultState, action) => {
+const appReducer = (state = defaultState, action) => {
   console.log(action.type);
 
   switch (action.type) {
@@ -39,8 +39,8 @@ const rootReducer = (state = defaultState, action) => {
       } else {
         // remove this data from cache
         // since it will be saved in current page
-        for( let i = 0; i < cache.length; i++){
-          if ( cache[i].page === nextPage) {
+        for (let i = 0; i < cache.length; i++) {
+          if (cache[i].page === nextPage) {
             cache.splice(i, 1);
             break;
           }
@@ -96,11 +96,11 @@ const rootReducer = (state = defaultState, action) => {
       for (let i = 0; i < cache.length; i++) {
         cache[i].data = fetchedForwardData.slice(i * DATA_PER_PAGE, (i + 1) * DATA_PER_PAGE);
         cache[i].isLoading = false;
-        cache[i].attemptTimes ++;
+        cache[i].attemptTimes++;
       }
       currentPageData.data = fetchedCurrentPageData;
       currentPageData.isLoading = false;
-      currentPageData.attemptTimes ++;
+      currentPageData.attemptTimes++;
       totalPage = calcTotalPage(totalItemNumber, DATA_PER_PAGE);
 
       return {
@@ -158,15 +158,15 @@ const rootReducer = (state = defaultState, action) => {
       let fetchedDataPage = fetchedDataParams.page + 1;
       let cache = [...state.cache];
       // if it's the current page
-      if(fetchedDataPage === currentPage){
+      if (fetchedDataPage === currentPage) {
         // set isLoading is false
         // let the program know the loading is over
         // so when program realizes the loading is over but no data is retrieved
         // it will load the data again
         currentPageData.isLoading = false;
-      } else{
+      } else {
         let cachedPageData = getDataFromCache(fetchedDataPage, cache);
-        if(cachedPageData){
+        if (cachedPageData) {
           cachedPageData.isLoading = false;
         }
       }
@@ -179,4 +179,4 @@ const rootReducer = (state = defaultState, action) => {
   }
 };
 
-export default rootReducer;
+export default appReducer;
