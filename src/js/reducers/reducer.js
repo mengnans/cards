@@ -16,7 +16,7 @@ const defaultState = {
   currentPageData: createInitialPageData(1),
   // default total page is ?, since we ain't sure how many pages in total
   totalPage: "?",
-  // default empoty cache for the system
+  // default empty cache for the system
   cache: [],
   // default null selected Id for the drawer
   selectedId: null,
@@ -172,7 +172,6 @@ const appReducer = (state = defaultState, action) => {
       }
       return {...state, currentPageData: currentPageData, cache: cache}
     }
-
 
     default:
       return state;

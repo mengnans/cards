@@ -12,6 +12,7 @@ export const createInitialPageData = (page) => {
   let initialPageData = {};
   initialPageData.page = page;
   initialPageData.isLoading = false;
+  initialPageData.isRecentlyReLoaded = false;
   initialPageData.attemptTimes = 0;
   initialPageData.data = null;
   return initialPageData;

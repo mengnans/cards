@@ -7,7 +7,7 @@ import {toggleDrawer} from "../actions/actions";
 import PropTypes from "prop-types";
 
 const mapStateToProps = state => {
-  return {currentPageData: state.currentPageData.data, id: state.selectedId}
+  return {currentPageData: state.currentPageData, id: state.selectedId}
 };
 
 const mapDispatchToProps = dispatch => {
@@ -27,7 +27,7 @@ class DrawerContainer extends React.Component {
     } else {
       isOpen = true;
       // extract the data needed for the drawer
-      extractedData = extractData(currentPageData, this.props.id);
+      extractedData = extractData(currentPageData.data, this.props.id);
     }
     return (
       <Drawer
@@ -40,7 +40,7 @@ class DrawerContainer extends React.Component {
 }
 
 DrawerContainer.propTypes = {
-  currentPageData: PropTypes.array,
+  currentPageData: PropTypes.object,
 };
 
 const ConnectedDrawerContainer = connect(mapStateToProps, mapDispatchToProps)(DrawerContainer);

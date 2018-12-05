@@ -36,7 +36,7 @@ class AppContentContainer extends Component {
     if (totalPage === "?" && !currentPageData.isLoading) {
       initialLoad(0, 5 * DATA_PER_PAGE);
     }
-    // if no data, then load it
+    // if no data and it's not loading, then load it
     else if (!currentPageData.data && !currentPageData.isLoading) {
       load(page, DATA_PER_PAGE);
     }

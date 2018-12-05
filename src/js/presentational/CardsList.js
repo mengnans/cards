@@ -3,7 +3,7 @@ import Grid from '@material-ui/core/Grid';
 import CardItem from "./Card";
 import {withStyles} from "@material-ui/core";
 import PropTypes from "prop-types";
-import {TWELWE_ARRAY} from "../constants/data-fetch-constant";
+import {TWELVE_ARRAY} from "../constants/data-fetch-constant";
 
 const styles = ({
   root: {
@@ -15,7 +15,7 @@ function CardsList(props) {
 
   const spacing = 16;
   let {pageData, onCardClick, isLoading, loadingInfo, progressBarColor} = props;
-  let children = TWELWE_ARRAY.map((value, index) => {
+  let children = TWELVE_ARRAY.map((value, index) => {
     let coreData, id;
     let noData = false;
     if (!isLoading) {
