@@ -21,7 +21,6 @@
     "lint": "eslint ./src/js/*/*.js",
     "test": "jest",
     "test:watch": "jest --watch",
-    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": "react-app"
