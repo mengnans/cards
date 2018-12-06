@@ -15,6 +15,7 @@ export const getDataFromCache = (page, cache) => {
 
 /**
  * create the initial data object
+ * the detail of the data structure is in the README.md
  * @param page
  * @returns {*} the page data
  */

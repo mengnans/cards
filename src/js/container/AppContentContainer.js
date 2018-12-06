@@ -39,19 +39,19 @@ const mapDispatchToProps = dispatch => {
  * calculate how many cache do we need to load
  *
  * based on the assumption listed in the README.md
- * we tend to load more data in the forward (from left to right) direction
+ * we tend to load cache more data in the forward (from left to right) direction
  * thus when the number of the cache in the forward direction is less or equal than the threshold (in this case 2)
  * we will load more data
  *
  * then, we should calculate how many page do we need to load
- * my algorithm is designed to load as more page as possible
+ * my algorithm is designed to load as more pages as possible
  * firstly we need to find out the most forward(right) page data in the cache
  *
  * e.g. the right cache has 2 left, and the rightmost page is 14
  * since we already have 2 page in the right direction
  * so we at most load 8 - 2 = 6 pages
  * however, we can't load 6 pages right away, since backend only accepts page and perPage parameters
- * so my algorithm runs a for loop (from 6 to 1), to find out the biggest number that rightmost page % this number === 0
+ * so my algorithm runs a for loop (from 6 to 1), to find out the biggest number that fulfills (rightmost page % this number === 0)
  * if this case, 14 is divisible by 2
  * then we can only load 2 pages, which is 15 and 16
  *
