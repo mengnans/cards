@@ -3,7 +3,7 @@ import {
   PAGE_CHANGE,
   INITIAL_LOAD,
   LOAD,
-  REMOVE_IS_RECENTLY_RE_LOADED,
+  REMOVE_RECENTLY_RE_LOADED_FLAG,
   LOAD_MORE_CACHE
 } from "../constants/action-types";
 import { get } from "../data-fetch/data-fetch";
@@ -14,5 +14,5 @@ export const pageChange = pageNumber => ({type: PAGE_CHANGE, payload: pageNumber
 export const toggleDrawer = (selectedId) => ({type: TOGGLE_DRAWER, payload: selectedId});
 export const initialLoad = (page, dataPerPage) => ({ type: INITIAL_LOAD,  payload: get(BACKEND_URL,generateUrlParams(page, dataPerPage))});
 export const load = (page, dataPerPage) => ({ type: LOAD,  payload: get(BACKEND_URL,generateUrlParams(page, dataPerPage))});
-export const removeIsRecentlyLoadedFlag = (page) => ({ type: REMOVE_IS_RECENTLY_RE_LOADED,  payload: page});
+export const removeRecentlyReloadedFlag = (page) => ({ type: REMOVE_RECENTLY_RE_LOADED_FLAG,  payload: page});
 export const loadMoreCache = (startPage, endPage) => ({ type: LOAD_MORE_CACHE,  payload: {startPage: startPage, endPage: endPage}});

@@ -1,7 +1,13 @@
 /* eslint-disable no-unused-vars */
+/* eslint-disable no-console */
 import React, {Component} from "react";
 import "../../styles/AppContent.css";
-import {initialLoad, load, loadMoreCache, removeIsRecentlyLoadedFlag} from "../actions/actions";
+import {
+  initialLoad,
+  load,
+  loadMoreCache,
+  removeRecentlyReloadedFlag
+} from "../actions/actions";
 import {connect} from "react-redux";
 import AppContent from "../presentational/AppContent";
 import {DATA_PER_PAGE, FORWARD_CACHE_THRESHOLD, MAX_CACHE_LENGTH, RE_LOAD_INTERVAL} from "../constants/constant";
@@ -40,7 +46,6 @@ const calcCacheNeeded = (currentPage, cache) => {
     }
   }
 
-  console.log("left " + forwardCachedDataLeft);
   if (forwardCachedDataLeft <= FORWARD_CACHE_THRESHOLD) {
     cacheNeededObject.isMoreCacheNeeded = true;
     cacheNeededObject.mostForwardPage = mostForwardPage;
@@ -75,26 +80,33 @@ class AppContentContainer extends Component {
     if (totalPage === "?" && !currentPageData.isLoading && !currentPageData.isRecentlyReLoaded) {
       initialLoad(0, 5 * DATA_PER_PAGE);
       // the reload can only occur once every 5 seconds
-      setTimeout(() => removeIsRecentlyLoadedFlag(currentPageData.page), RE_LOAD_INTERVAL * 1000);
+      setTimeout(() => removeRecentlyReloadedFlag(currentPageData.page), RE_LOAD_INTERVAL * 1000);
     }
     // if no data and it's not loading, then load it
     // also only load the data when the data is not recently loaded
     else if (!currentPageData.data && !currentPageData.isLoading && !currentPageData.isRecentlyReLoaded) {
       load(page - 1, DATA_PER_PAGE);
+      console.log("load page " + (page - 1) + "  per Page " + DATA_PER_PAGE);
       // if it's not the first time to load the data
       // then it's a reload
       // the reload can only occur once every 5 seconds
       if (currentPageData.attemptTimes >= 1) {
-        setTimeout(() => removeIsRecentlyLoadedFlag(currentPageData.page), RE_LOAD_INTERVAL * 1000);
+        setTimeout(() => removeRecentlyReloadedFlag(currentPageData.page), RE_LOAD_INTERVAL * 1000);
       }
     } else {
       let cacheNeededObject = calcCacheNeeded(page, cache);
       if (cacheNeededObject.isMoreCacheNeeded) {
         let maxPageToLoad = cacheNeededObject.maxPageToLoad;
         let mostForwardPage = cacheNeededObject.mostForwardPage;
-        load(mostForwardPage / maxPageToLoad, DATA_PER_PAGE * maxPageToLoad);
+        let startPage = mostForwardPage + 1;
+        let page = mostForwardPage / maxPageToLoad;
+        let perPage = DATA_PER_PAGE * maxPageToLoad;
+
         // let redux know we are loading these data
-        loadMoreCache(mostForwardPage, mostForwardPage + maxPageToLoad);
+        loadMoreCache(startPage, startPage + maxPageToLoad - 1);
+        // start loading these data
+        load(page, perPage);
+        console.log("load more page " + page + "  per Page " + perPage);
       }
     }
   }

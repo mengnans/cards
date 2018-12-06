@@ -6,7 +6,7 @@ import {
   INITIAL_LOAD_REJECTED,
   LOAD_FULFILLED, LOAD_MORE_CACHE,
   LOAD_PENDING, LOAD_REJECTED,
-  PAGE_CHANGE, REMOVE_IS_RECENTLY_RE_LOADED,
+  PAGE_CHANGE, REMOVE_RECENTLY_RE_LOADED_FLAG,
   TOGGLE_DRAWER
 } from "../constants/action-types";
 import {DATA_PER_PAGE, MAX_CACHE_LENGTH} from "../constants/constant";
@@ -31,7 +31,6 @@ const defaultState = {
 };
 
 const appReducer = (state = defaultState, action) => {
-  console.log(action.type);
 
   switch (action.type) {
     case TOGGLE_DRAWER: {
@@ -71,7 +70,7 @@ const appReducer = (state = defaultState, action) => {
       };
     }
 
-    case REMOVE_IS_RECENTLY_RE_LOADED: {
+    case REMOVE_RECENTLY_RE_LOADED_FLAG: {
       let cache = [...state.cache];
       let currentPageData = {...state.currentPageData};
       let pageToRemove = action.payload;
@@ -150,10 +149,6 @@ const appReducer = (state = defaultState, action) => {
     case LOAD_PENDING: {
       let currentPageData = {...state.currentPageData};
       currentPageData.isLoading = true;
-      currentPageData.attemptTimes++;
-      if (currentPageData.attemptTimes > 1) {
-        currentPageData.isRecentlyReLoaded = true;
-      }
       return {...state, currentPageData: currentPageData};
     }
 
@@ -171,22 +166,20 @@ const appReducer = (state = defaultState, action) => {
 
       startPage = paramPage * pageLoadedNumber + 1;
       endPage = startPage + pageLoadedNumber - 1;
-      console.log("page " + paramPage);
-      console.log("perPage" + fetchedDataParams.perPage);
-      console.log("start" + startPage);
-      console.log("end" + endPage);
 
       for (let i = startPage; i <= endPage; i++) {
         let singlePageData = fetchedData.slice((i - startPage) * DATA_PER_PAGE, (i - startPage + 1) * DATA_PER_PAGE);
         if (i === currentPageData.page) {
           currentPageData.isLoading = false;
           currentPageData.data = singlePageData;
+          currentPageData.attemptTimes++;
         } else {
           let cachePageData = getDataFromCache(i, cache);
           // if it's in the cache
           if (cachePageData) {
             cachePageData.isLoading = false;
             cachePageData.data = singlePageData;
+            cachePageData.attemptTimes++;
           }
         }
       }
@@ -198,24 +191,35 @@ const appReducer = (state = defaultState, action) => {
 
     case LOAD_REJECTED: {
       let currentPageData = {...state.currentPageData};
-      let currentPage = currentPageData.page;
       let fetchedDataParams = action.payload;
       let fetchedDataPage = fetchedDataParams.page + 1;
+      let paramPage = fetchedDataParams.page;
+      let pageLoadedNumber = fetchedDataParams.perPage / DATA_PER_PAGE;
       let cache = [...state.cache];
+      let startPage, endPage;
 
-      // if it's the current page
-      if (fetchedDataPage === currentPage) {
-        // set isLoading is false
-        // let the program know the loading is over
-        // so when program realizes the loading is over but no data is retrieved
-        // it will load the data again
-        currentPageData.isLoading = false;
-      } else {
-        let cachedPageData = getDataFromCache(fetchedDataPage, cache);
-        if (cachedPageData) {
-          cachedPageData.isLoading = false;
+      startPage = paramPage * pageLoadedNumber + 1;
+      endPage = startPage + pageLoadedNumber - 1;
+
+      for (let i = startPage; i <= endPage; i++) {
+        // if it's the current page
+        if (fetchedDataPage === i) {
+          // set isLoading is false
+          // let the program know the loading is over
+          // so when program realizes the loading is over but no data is retrieved
+          // it will load the data again
+          currentPageData.isLoading = false;
+          currentPageData.attemptTimes++;
+        } else {
+          let cachedPageData = getDataFromCache(i, cache);
+          if (cachedPageData) {
+            cachedPageData.isLoading = false;
+            cachedPageData.attemptTimes++;
+          }
         }
       }
+
+
       return {...state, currentPageData: currentPageData, cache: cache};
     }
 
@@ -224,16 +228,13 @@ const appReducer = (state = defaultState, action) => {
       let cache = [...state.cache];
       let currentPageData = {...state.currentPageData};
       let currentPageNumber = currentPageData.page;
-      console.log("SSS " + startPage );
-      console.log("EEE" + endPage);
-      console.log(cache);
       for (let i = startPage; i <= endPage; i++) {
         let pageData = createInitialPageData(i);
         pageData.isLoading = true;
         cache.push(pageData);
-        shrinkCacheIfNeeded(cache, MAX_CACHE_LENGTH, true, currentPageNumber);
       }
-      console.log(cache);
+      shrinkCacheIfNeeded(cache, MAX_CACHE_LENGTH, true, currentPageNumber);
+
       return {...state, cache: cache};
     }
 
