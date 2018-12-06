@@ -65,4 +65,15 @@ soon.
 in some way) are also likely to be accessed again soon.
 
 
-Based on these two properties of caching, I made a assumption that **the most recently accessed pages are more likely to be accessed again**. It is because that the most recently accessed pages not only have been accessed recently (following the Temporal locality), but also are close to the current page(following the Spatial locality).
+Based on these two properties of caching, I made a assumption that **the most recently accessed pages are more likely to be accessed again**. It is because that the most recently accessed pages not only have been accessed recently (following the Temporal locality), but also are close to the current page (following the Spatial locality).
+
+#### Caching algorithm
+Based on the above assumption, my cache saves eight most recently accessed page. 
+
+Once the user triggers the pageChange action, the data of the current page will be put into the cache when it doesn't have it. In addition, the algorithm will try to read the data of the next page from cache first.
+
+#### Fetching algorithm
+Fetching only one page (12 items in this case) at a time, and only fetch the data that is not in the cache.
+
+### Common algorithm used by both implementations
+
