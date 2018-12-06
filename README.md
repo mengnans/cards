@@ -65,4 +65,4 @@ soon.
 in some way) are also likely to be accessed again soon.
 
 
-Based on these two properties of caching, I made a assumption that *the most recently accessed pages are more likely to be accessed again*. It is because that the most recently accessed pages not only have been accessed recently (following the Temporal locality), but also are close to the current page(following the Spatial locality).
+Based on these two properties of caching, I made a assumption that **the most recently accessed pages are more likely to be accessed again**. It is because that the most recently accessed pages not only have been accessed recently (following the Temporal locality), but also are close to the current page(following the Spatial locality).
