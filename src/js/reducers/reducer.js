@@ -136,14 +136,33 @@ const appReducer = (state = defaultState, action) => {
       let totalItemNumber = action.payload.totalItemNumber;
       let totalPage;
       let currentPageData = {...state.currentPageData};
-      let fetchedCurrentPageData = fetchedData.slice(0, DATA_PER_PAGE);
-      let fetchedForwardData = fetchedData.slice(DATA_PER_PAGE);
+      let fetchedCurrentPageData;
+      let fetchedForwardData;
       let cache = [...state.cache];
+
+      try{
+        fetchedCurrentPageData = fetchedData.slice(0, DATA_PER_PAGE);
+      } catch(err){
+        console.log(err);
+        fetchedCurrentPageData = null;
+      }
+
+      try{
+        fetchedForwardData = fetchedData.slice(DATA_PER_PAGE);
+      } catch(err){
+        console.log(err);
+        fetchedForwardData = null;
+      }
 
 
       for (let i = 0; i < cache.length; i++) {
         // set the data
-        cache[i].data = fetchedForwardData.slice(i * DATA_PER_PAGE, (i + 1) * DATA_PER_PAGE);
+        try{
+          cache[i].data = fetchedForwardData.slice(i * DATA_PER_PAGE, (i + 1) * DATA_PER_PAGE);
+        } catch(err){
+          console.log(err);
+          cache[i].data = null;
+        }
         // let redux know the loading of these data is over
         cache[i].isLoading = false;
         // set the attemptTimes
@@ -198,7 +217,15 @@ const appReducer = (state = defaultState, action) => {
 
       // put these data into current page or cache
       for (let i = startPage; i <= endPage; i++) {
-        let singlePageData = fetchedData.slice((i - startPage) * DATA_PER_PAGE, (i - startPage + 1) * DATA_PER_PAGE);
+
+        let singlePageData;
+        try{
+          singlePageData = fetchedData.slice((i - startPage) * DATA_PER_PAGE, (i - startPage + 1) * DATA_PER_PAGE);
+        }catch(err){
+          console.log(err);
+          singlePageData = null;
+        }
+
         if (i === currentPageData.page) {
           currentPageData.isLoading = false;
           currentPageData.data = singlePageData;
@@ -215,8 +242,7 @@ const appReducer = (state = defaultState, action) => {
       }
 
       // calc the total page
-      totalPage = calcTotalPage(totalItemNumber, DATA_PER_PAGE);
-      return {...state, currentPageData: currentPageData, cache: cache, totalPage: totalPage.toString()};
+      return {...state, currentPageData: currentPageData, cache: cache,};
 
     }
 
