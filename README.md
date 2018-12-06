@@ -1,13 +1,16 @@
 
 ## Running this project locally
 
-### use yarn
+### Use yarn
+Under the project root directory
 
 * Firstly run `yarn install`
 * Then run `yarn start`
 
 The project will start on port 8080.
-### use docker
+
+### Use docker
+Under the project root directory
 
 * Firstly run `make build`
 * Then run `make serve`
@@ -32,3 +35,5 @@ Builds the app for production to the `dist` folder.<br>
 ### `yarn lint`
 
 Running eslint on all the js files
+
+## Cache and data fetching algorithm
