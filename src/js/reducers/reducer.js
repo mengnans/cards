@@ -14,7 +14,6 @@ import {
   calcTotalPage,
   createInitialPageData,
   getDataFromCache,
-  reLoadedData,
   shrinkCacheIfNeeded
 } from "../utils/utils";
 
@@ -31,6 +30,8 @@ const defaultState = {
 };
 
 const appReducer = (state = defaultState, action) => {
+
+  console.log([...state.cache]);
 
   switch (action.type) {
     case TOGGLE_DRAWER: {
@@ -61,7 +62,7 @@ const appReducer = (state = defaultState, action) => {
       // if current page data is not in the cache
       if (!currentPageDataFromCache) {
         cache.push(state.currentPageData);
-        shrinkCacheIfNeeded(cache, MAX_CACHE_LENGTH);
+        shrinkCacheIfNeeded(cache, MAX_CACHE_LENGTH, currentPage, false);
       }
       return {
         ...state,
@@ -122,11 +123,11 @@ const appReducer = (state = defaultState, action) => {
       for (let i = 0; i < cache.length; i++) {
         cache[i].data = fetchedForwardData.slice(i * DATA_PER_PAGE, (i + 1) * DATA_PER_PAGE);
         cache[i].isLoading = false;
-        cache[i].attemptTimes ++;
+        cache[i].attemptTimes++;
       }
       currentPageData.data = fetchedCurrentPageData;
       currentPageData.isLoading = false;
-      currentPageData.attemptTimes ++;
+      currentPageData.attemptTimes++;
       totalPage = calcTotalPage(totalItemNumber, DATA_PER_PAGE);
 
       return {
@@ -143,10 +144,10 @@ const appReducer = (state = defaultState, action) => {
 
       for (let i = 0; i < cache.length; i++) {
         cache[i].isLoading = false;
-        cache[i].attemptTimes ++;
+        cache[i].attemptTimes++;
       }
       currentPageData.isLoading = false;
-      currentPageData.attemptTimes ++;
+      currentPageData.attemptTimes++;
       return {...state, currentPageData: currentPageData, cache: cache};
     }
 
@@ -237,7 +238,7 @@ const appReducer = (state = defaultState, action) => {
         pageData.isLoading = true;
         cache.push(pageData);
       }
-      shrinkCacheIfNeeded(cache, MAX_CACHE_LENGTH, true, currentPageNumber);
+      shrinkCacheIfNeeded(cache, MAX_CACHE_LENGTH, currentPageNumber, true);
 
       return {...state, cache: cache};
     }

@@ -10,7 +10,13 @@ import {
 } from "../actions/actions";
 import {connect} from "react-redux";
 import AppContent from "../presentational/AppContent";
-import {DATA_PER_PAGE, FORWARD_CACHE_THRESHOLD, MAX_CACHE_LENGTH, RE_LOAD_INTERVAL} from "../constants/constant";
+import {
+  DATA_PER_PAGE,
+  FORWARD_CACHE_THRESHOLD,
+  INITIAL_LOAD_NUMBER,
+  MAX_CACHE_LENGTH,
+  RE_LOAD_INTERVAL
+} from "../constants/constant";
 import PropTypes from "prop-types";
 
 const mapStateToProps = state => {
@@ -68,7 +74,7 @@ class AppContentContainer extends Component {
   componentDidMount() {
     let {initialLoad} = this.props;
 
-    initialLoad(0, 5 * DATA_PER_PAGE);
+    initialLoad(0, INITIAL_LOAD_NUMBER * DATA_PER_PAGE);
   }
 
   componentWillReceiveProps(nextProps, nextContext) {
@@ -78,8 +84,8 @@ class AppContentContainer extends Component {
     // if no total page and it's not loading, it means the initial load has failed
     // also only load the data when the data is not recently loaded
     if (totalPage === "?" && !currentPageData.isLoading && !currentPageData.isRecentlyReLoaded) {
-      initialLoad(0, 5 * DATA_PER_PAGE);
-      // the reload can only occur once every 5 seconds
+      initialLoad(0, INITIAL_LOAD_NUMBER * DATA_PER_PAGE);
+      // the reload can only occur at most once every 5 seconds
       if (currentPageData.attemptTimes >= 1) {
         setRecentlyReloadedFlag(page, true);
         setTimeout(() => setRecentlyReloadedFlag(page, false), RE_LOAD_INTERVAL * 1000);
@@ -92,7 +98,7 @@ class AppContentContainer extends Component {
       console.log("load page " + (page - 1) + "  per Page " + DATA_PER_PAGE);
       // if it's not the first time to load the data
       // then it's a reload
-      // the reload can only occur once every 5 seconds
+      // the reload can only occur at most once every 5 seconds
       if (currentPageData.attemptTimes >= 1) {
         setRecentlyReloadedFlag(page, true);
         setTimeout(() => setRecentlyReloadedFlag(page, false), RE_LOAD_INTERVAL * 1000);

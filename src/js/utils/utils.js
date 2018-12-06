@@ -31,7 +31,7 @@ export const generateRandomInteger = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1) + min);
 };
 
-export const shrinkCacheIfNeeded = (cache, cacheMaxSize, onlyRemoveBackwardData = false, currentPageNumber = 0) => {
+export const shrinkCacheIfNeeded = (cache, cacheMaxSize, currentPageNumber, onlyRemoveBackwardData = false) => {
   while (cache.length > cacheMaxSize) {
     if (onlyRemoveBackwardData) {
       for (let i = 0; i < cache.length; i++) {
@@ -41,7 +41,17 @@ export const shrinkCacheIfNeeded = (cache, cacheMaxSize, onlyRemoveBackwardData 
         }
       }
     } else {
-      cache.shift();
+      let leftmostCachePage = currentPageNumber;
+      let leftmostCacheIndex = 0;
+
+      for (let i = 0; i < cache.length; i++) {
+        if (cache[i].page < leftmostCachePage) {
+          leftmostCachePage = cache[i].page;
+          leftmostCacheIndex = i;
+        }
+      }
+      console.log(leftmostCacheIndex);
+      cache.splice(leftmostCacheIndex, 1);
     }
   }
 };
