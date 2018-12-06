@@ -31,8 +31,6 @@ const defaultState = {
 
 const appReducer = (state = defaultState, action) => {
 
-  console.log([...state.cache]);
-
   switch (action.type) {
     case TOGGLE_DRAWER: {
       return {...state, selectedId: action.payload};
@@ -42,11 +40,14 @@ const appReducer = (state = defaultState, action) => {
       let nextPage = action.payload;
       let cache = [...state.cache];
       let currentPage = state.currentPageData.page;
-      let nextPageData = getDataFromCache(nextPage, cache);
+      let nextPageData;
       let currentPageDataFromCache;
 
+      // get next page data from cache
+      nextPageData = getDataFromCache(nextPage, cache);
       // if next page is not in the cache
       if (!nextPageData) {
+        // create a new next page data object
         nextPageData = createInitialPageData(nextPage);
       } else {
         // remove this data from cache
@@ -58,6 +59,7 @@ const appReducer = (state = defaultState, action) => {
           }
         }
       }
+      // get current page data from cache
       currentPageDataFromCache = getDataFromCache(currentPage, cache);
       // if current page data is not in the cache
       if (!currentPageDataFromCache) {
@@ -75,11 +77,15 @@ const appReducer = (state = defaultState, action) => {
       let cache = [...state.cache];
       let currentPageData = {...state.currentPageData};
       let {page, flag} = action.payload;
-      let pageData;
-      pageData = getDataFromCache(page, cache);
-      if (pageData) {
-        pageData.isRecentlyReLoaded = flag;
-      } else if (page === currentPageData.page) {
+      let pageDataFromCache;
+
+      pageDataFromCache = getDataFromCache(page, cache);
+      // if it's in the cache
+      if (pageDataFromCache) {
+        pageDataFromCache.isRecentlyReLoaded = flag;
+      }
+      // else if it's the current page
+      else if (page === currentPageData.page) {
         currentPageData.isRecentlyReLoaded = flag;
       }
       return {...state, currentPageData: currentPageData, cache: cache};

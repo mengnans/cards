@@ -6,7 +6,7 @@ export const SORT_DIRECTION = "DESC";
 export const MAX_CACHE_LENGTH = 8;
 export const INITIAL_LOAD_NUMBER = 5;
 export const FORWARD_CACHE_THRESHOLD = 2;
-export const RE_LOAD_INTERVAL = 5;
+export const RE_LOAD_INTERVAL = 15;
 
 let twelveArray = new Array(DATA_PER_PAGE);
 for (let i = 0; i < twelveArray.length; i++) {

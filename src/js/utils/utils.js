@@ -22,16 +22,11 @@ export const calcTotalPage = (totalDataNumber, dataPerPage) => {
   return Math.ceil(totalDataNumber / dataPerPage);
 };
 
-export const reLoadedData = (data) => {
-  data.isLoading = true;
-  data.attemptTimes++;
-};
-
 export const generateRandomInteger = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1) + min);
 };
 
-export const shrinkCacheIfNeeded = (cache, cacheMaxSize, currentPageNumber, onlyRemoveBackwardData = false) => {
+export const shrinkCacheIfNeeded = (cache, cacheMaxSize, currentPageNumber, onlyRemoveBackwardData) => {
   while (cache.length > cacheMaxSize) {
     if (onlyRemoveBackwardData) {
       for (let i = 0; i < cache.length; i++) {
@@ -50,7 +45,6 @@ export const shrinkCacheIfNeeded = (cache, cacheMaxSize, currentPageNumber, only
           leftmostCacheIndex = i;
         }
       }
-      console.log(leftmostCacheIndex);
       cache.splice(leftmostCacheIndex, 1);
     }
   }

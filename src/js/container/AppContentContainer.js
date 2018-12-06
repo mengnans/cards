@@ -5,8 +5,7 @@ import "../../styles/AppContent.css";
 import {
   initialLoad,
   load,
-  loadMoreCache,
-  setRecentlyReloadedFlag
+  loadMoreCache, setRecentlyReloadedFlag,
 } from "../actions/actions";
 import {connect} from "react-redux";
 import AppContent from "../presentational/AppContent";
@@ -31,11 +30,10 @@ const mapDispatchToProps = dispatch => {
   return {
     initialLoad: (page, dataPerPage) => dispatch(initialLoad(page, dataPerPage)),
     load: (page, dataPerPage) => dispatch(load(page, dataPerPage)),
+    loadMoreCache: (startPage, endPage) => dispatch(loadMoreCache(startPage, endPage)),
     setRecentlyReloadedFlag: (page, flag) => dispatch(setRecentlyReloadedFlag(page, flag)),
-    loadMoreCache: (startPage, endPage) => dispatch(loadMoreCache(startPage, endPage))
   };
 };
-
 
 const calcCacheNeeded = (currentPage, cache) => {
   let forwardCachedDataLeft = 0;
@@ -63,8 +61,8 @@ const calcCacheNeeded = (currentPage, cache) => {
       }
     }
   } else {
-    cacheNeededObject.isMoreCacheNeeded = false;
     // no data needed to load
+    cacheNeededObject.isMoreCacheNeeded = false;
   }
   return cacheNeededObject;
 };
@@ -73,19 +71,18 @@ class AppContentContainer extends Component {
 
   componentDidMount() {
     let {initialLoad} = this.props;
-
     initialLoad(0, INITIAL_LOAD_NUMBER * DATA_PER_PAGE);
   }
 
   componentWillReceiveProps(nextProps, nextContext) {
-    let {currentPageData, load, initialLoad, loadMoreCache, totalPage, removeIsRecentlyLoadedFlag, cache} = nextProps;
+    let {currentPageData, load, initialLoad, setRecentlyReloadedFlag, loadMoreCache, totalPage, cache} = nextProps;
     let page = currentPageData.page;
 
     // if no total page and it's not loading, it means the initial load has failed
     // also only load the data when the data is not recently loaded
     if (totalPage === "?" && !currentPageData.isLoading && !currentPageData.isRecentlyReLoaded) {
+      // the reload can only occur at most once every 15 seconds
       initialLoad(0, INITIAL_LOAD_NUMBER * DATA_PER_PAGE);
-      // the reload can only occur at most once every 5 seconds
       if (currentPageData.attemptTimes >= 1) {
         setRecentlyReloadedFlag(page, true);
         setTimeout(() => setRecentlyReloadedFlag(page, false), RE_LOAD_INTERVAL * 1000);
@@ -95,10 +92,9 @@ class AppContentContainer extends Component {
     // also only load the data when the data is not recently loaded
     else if (!currentPageData.data && !currentPageData.isLoading && !currentPageData.isRecentlyReLoaded) {
       load(page - 1, DATA_PER_PAGE);
-      console.log("load page " + (page - 1) + "  per Page " + DATA_PER_PAGE);
       // if it's not the first time to load the data
       // then it's a reload
-      // the reload can only occur at most once every 5 seconds
+      // the reload can only occur at most once every 15 seconds
       if (currentPageData.attemptTimes >= 1) {
         setRecentlyReloadedFlag(page, true);
         setTimeout(() => setRecentlyReloadedFlag(page, false), RE_LOAD_INTERVAL * 1000);
@@ -116,7 +112,6 @@ class AppContentContainer extends Component {
         loadMoreCache(startPage, startPage + maxPageToLoad - 1);
         // start loading these data
         load(page, perPage);
-        console.log("load more page " + page + "  per Page " + perPage);
       }
     }
   }
