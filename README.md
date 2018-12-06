@@ -86,8 +86,8 @@ My fetching algorithm tends to load multiple pages at a single time, and it only
 
 * Calculate the right most page in the cache.
 * Calculate the size of the right-cache.
-* we at most fetch ```(max-cache-size - size of the right-cache)``` pages, since we also need to keep the right-cache.
-* we can't read this amount of page right away with a single request, since the back-end only accpets page and perPage parameter.
+* we at most fetch ```(max-cache-size - size of the right-cache)``` pages, since we also need to keep the existing right-cache.
+* we can't read this amount of page right away with a single request, since the back-end only accpets page and perPage parameter. (for example, you can't load only page 2 3 4 5 from the back-end with page and perPage paramters.)
 * so my algorithm runs a for loop (from max_amount to 1), to find out the biggest number that fulfills ```(rightmost page % this number === 0)```.
 * this biggest number is the max amount of pages we can fetch.
 
