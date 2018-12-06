@@ -105,9 +105,9 @@ This biggest number is 2, so my algorithm will load 2 more pages (page 15 and pa
 If you find hard to understandg the above calculation, please have a look at the following examples to get some insights.
 
 Ohter examples are:
-* right most page = 24, size of the `forward-cache` is 2, it will load 6 pages, from page 25 to page 30.
-* right most page = 33, size of the `forward-cache` is 1, it will load 3 pages, from page 34 to page 36.
-* right most page = 24, size of the `forward-cache` is 5, it won't load more cache, since the size is bigger than the `threshold`.
+* right most page in cache = 24, size of the `forward-cache` is 2, it will load 6 pages, from page 25 to page 30.
+* right most page in cache = 33, size of the `forward-cache` is 2, it will load 3 pages, from page 34 to page 36.
+* right most page in cache = 24, size of the `forward-cache` is 5, it won't load more cache, since the size is bigger than the `threshold`.
 
 ### `history-cache`
 #### Assumptions
