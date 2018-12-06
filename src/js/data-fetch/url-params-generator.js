@@ -1,10 +1,10 @@
 /* eslint-disable no-console */
 import {SORT_DIRECTION, TICKET_TYPE} from "../constants/constant";
 
+// generate the url parameters for data fetching
 const generateUrlParams = (page, perPage) => {
   let params = {};
   if (page < 0) {
-    // eslint-disable-next-line no-console
     console.log("Invalid page number");
     page = 0;
   }

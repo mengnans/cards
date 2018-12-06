@@ -4,15 +4,22 @@ import {
   INITIAL_LOAD_FULFILLED,
   INITIAL_LOAD_PENDING,
   INITIAL_LOAD_REJECTED,
-  LOAD_FULFILLED,
+  LOAD_FULFILLED, LOAD_MORE_CACHE,
   LOAD_PENDING, LOAD_REJECTED,
-  PAGE_CHANGE, REMOVE_IS_RECENTLY_RE_LOADED,
+  PAGE_CHANGE, SET_RECENTLY_RE_LOADED_FLAG,
   TOGGLE_DRAWER
 } from "../constants/action-types";
 import {DATA_PER_PAGE, MAX_CACHE_LENGTH} from "../constants/constant";
-import {calcTotalPage, createInitialPageData, getDataFromCache, reLoadedData} from "../utils/utils";
+import {
+  calcTotalPage,
+  createInitialPageData,
+  getDataFromCache,
+  shrinkCacheIfNeeded
+} from "../utils/utils";
 
-
+/**
+ * the default state
+ */
 const defaultState = {
   // default current page data
   currentPageData: createInitialPageData(1),
@@ -25,7 +32,6 @@ const defaultState = {
 };
 
 const appReducer = (state = defaultState, action) => {
-  console.log(action.type);
 
   switch (action.type) {
     case TOGGLE_DRAWER: {
@@ -36,11 +42,14 @@ const appReducer = (state = defaultState, action) => {
       let nextPage = action.payload;
       let cache = [...state.cache];
       let currentPage = state.currentPageData.page;
-      let nextPageData = getDataFromCache(nextPage, cache);
+      let nextPageData;
       let currentPageDataFromCache;
 
+      // get next page data from cache
+      nextPageData = getDataFromCache(nextPage, cache);
       // if next page is not in the cache
       if (!nextPageData) {
+        // create a new next page data object
         nextPageData = createInitialPageData(nextPage);
       } else {
         // remove this data from cache
@@ -52,13 +61,12 @@ const appReducer = (state = defaultState, action) => {
           }
         }
       }
+      // get current page data from cache
       currentPageDataFromCache = getDataFromCache(currentPage, cache);
       // if current page data is not in the cache
       if (!currentPageDataFromCache) {
         cache.push(state.currentPageData);
-        if (cache.length > MAX_CACHE_LENGTH) {
-          cache.shift();
-        }
+        shrinkCacheIfNeeded(cache, MAX_CACHE_LENGTH, currentPage, false);
       }
       return {
         ...state,
@@ -67,16 +75,20 @@ const appReducer = (state = defaultState, action) => {
       };
     }
 
-    case REMOVE_IS_RECENTLY_RE_LOADED: {
+    case SET_RECENTLY_RE_LOADED_FLAG: {
       let cache = [...state.cache];
       let currentPageData = {...state.currentPageData};
-      let pageToRemove = action.payload;
-      let pageData;
-      pageData = getDataFromCache(pageToRemove, cache);
-      if (pageData) {
-        pageData.isRecentlyReLoaded = false;
-      } else if (pageToRemove === currentPageData.page) {
-        currentPageData.isRecentlyReLoaded = false;
+      let {page, flag} = action.payload;
+      let pageDataFromCache;
+
+      pageDataFromCache = getDataFromCache(page, cache);
+      // if it's in the cache
+      if (pageDataFromCache) {
+        pageDataFromCache.isRecentlyReLoaded = flag;
+      }
+      // else if it's the current page
+      else if (page === currentPageData.page) {
+        currentPageData.isRecentlyReLoaded = flag;
       }
       return {...state, currentPageData: currentPageData, cache: cache};
     }
@@ -99,10 +111,10 @@ const appReducer = (state = defaultState, action) => {
       // if it's not the first time
       else {
         for (let i = 0; i < cache.length; i++) {
-          reLoadedData(cache[i]);
+          cache[i].isLoading = true;
         }
         currentPageData = {...state.currentPageData};
-        reLoadedData(currentPageData);
+        currentPageData.isLoading = true;
       }
       return {...state, currentPageData: currentPageData, cache: cache};
     }
@@ -119,9 +131,11 @@ const appReducer = (state = defaultState, action) => {
       for (let i = 0; i < cache.length; i++) {
         cache[i].data = fetchedForwardData.slice(i * DATA_PER_PAGE, (i + 1) * DATA_PER_PAGE);
         cache[i].isLoading = false;
+        cache[i].attemptTimes++;
       }
       currentPageData.data = fetchedCurrentPageData;
       currentPageData.isLoading = false;
+      currentPageData.attemptTimes++;
       totalPage = calcTotalPage(totalItemNumber, DATA_PER_PAGE);
 
       return {
@@ -138,18 +152,16 @@ const appReducer = (state = defaultState, action) => {
 
       for (let i = 0; i < cache.length; i++) {
         cache[i].isLoading = false;
+        cache[i].attemptTimes++;
       }
       currentPageData.isLoading = false;
+      currentPageData.attemptTimes++;
       return {...state, currentPageData: currentPageData, cache: cache};
     }
 
     case LOAD_PENDING: {
       let currentPageData = {...state.currentPageData};
       currentPageData.isLoading = true;
-      currentPageData.attemptTimes++;
-      if (currentPageData.attemptTimes > 1) {
-        currentPageData.isRecentlyReLoaded = true;
-      }
       return {...state, currentPageData: currentPageData};
     }
 
@@ -157,45 +169,86 @@ const appReducer = (state = defaultState, action) => {
       let fetchedData = action.payload.data;
       let totalItemNumber = action.payload.totalItemNumber;
       let fetchedDataParams = action.payload.params;
-      let fetchedDataPage = fetchedDataParams.page + 1;
+      // the first page loaded, and the last page loaded
+      let startPage, endPage;
+      let paramPage = fetchedDataParams.page;
+      let pageLoadedNumber = fetchedDataParams.perPage / DATA_PER_PAGE;
       let currentPageData = {...state.currentPageData};
       let cache = [...state.cache];
       let totalPage;
-      if (fetchedDataPage === currentPageData.page) {
-        currentPageData.isLoading = false;
-        currentPageData.data = fetchedData;
-      } else {
-        let cachePageData = getDataFromCache(fetchedDataPage, cache);
-        // if it's in the cache
-        if (cachePageData) {
-          cachePageData.isLoading = false;
-          cachePageData.data = fetchedData;
+
+      startPage = paramPage * pageLoadedNumber + 1;
+      endPage = startPage + pageLoadedNumber - 1;
+
+      for (let i = startPage; i <= endPage; i++) {
+        let singlePageData = fetchedData.slice((i - startPage) * DATA_PER_PAGE, (i - startPage + 1) * DATA_PER_PAGE);
+        if (i === currentPageData.page) {
+          currentPageData.isLoading = false;
+          currentPageData.data = singlePageData;
+          currentPageData.attemptTimes++;
+        } else {
+          let cachePageData = getDataFromCache(i, cache);
+          // if it's in the cache
+          if (cachePageData) {
+            cachePageData.isLoading = false;
+            cachePageData.data = singlePageData;
+            cachePageData.attemptTimes++;
+          }
         }
       }
+
       totalPage = calcTotalPage(totalItemNumber, DATA_PER_PAGE);
       return {...state, currentPageData: currentPageData, cache: cache, totalPage: totalPage.toString()};
+
     }
 
     case LOAD_REJECTED: {
       let currentPageData = {...state.currentPageData};
-      let currentPage = currentPageData.page;
       let fetchedDataParams = action.payload;
       let fetchedDataPage = fetchedDataParams.page + 1;
+      let paramPage = fetchedDataParams.page;
+      let pageLoadedNumber = fetchedDataParams.perPage / DATA_PER_PAGE;
       let cache = [...state.cache];
-      // if it's the current page
-      if (fetchedDataPage === currentPage) {
-        // set isLoading is false
-        // let the program know the loading is over
-        // so when program realizes the loading is over but no data is retrieved
-        // it will load the data again
-        currentPageData.isLoading = false;
-      } else {
-        let cachedPageData = getDataFromCache(fetchedDataPage, cache);
-        if (cachedPageData) {
-          cachedPageData.isLoading = false;
+      let startPage, endPage;
+
+      startPage = paramPage * pageLoadedNumber + 1;
+      endPage = startPage + pageLoadedNumber - 1;
+
+      for (let i = startPage; i <= endPage; i++) {
+        // if it's the current page
+        if (fetchedDataPage === i) {
+          // set isLoading is false
+          // let the program know the loading is over
+          // so when program realizes the loading is over but no data is retrieved
+          // it will load the data again
+          currentPageData.isLoading = false;
+          currentPageData.attemptTimes++;
+        } else {
+          let cachedPageData = getDataFromCache(i, cache);
+          if (cachedPageData) {
+            cachedPageData.isLoading = false;
+            cachedPageData.attemptTimes++;
+          }
         }
       }
+
+
       return {...state, currentPageData: currentPageData, cache: cache};
+    }
+
+    case LOAD_MORE_CACHE: {
+      let {startPage, endPage} = action.payload;
+      let cache = [...state.cache];
+      let currentPageData = {...state.currentPageData};
+      let currentPageNumber = currentPageData.page;
+      for (let i = startPage; i <= endPage; i++) {
+        let pageData = createInitialPageData(i);
+        pageData.isLoading = true;
+        cache.push(pageData);
+      }
+      shrinkCacheIfNeeded(cache, MAX_CACHE_LENGTH, currentPageNumber, true);
+
+      return {...state, cache: cache};
     }
 
     default:

@@ -5,6 +5,9 @@ import LinesEllipsis from "react-lines-ellipsis";
 
 const ellipsis = "...";
 
+/**
+ * render a text with at most {maxLine} lines
+ */
 function Line(props) {
   let {text, maxLine} = props;
 

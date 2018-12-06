@@ -1,3 +1,6 @@
+/**
+ * mock data, only used for test
+ */
 const mockData = [
   {
     "coreData": {

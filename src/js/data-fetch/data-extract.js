@@ -1,4 +1,10 @@
-//extract the data for the drawer
+/**
+ * extract the data for the drawer
+ * @param data the page data (includes 12 card data)
+ * @param id the id of a card
+ * @returns {array} return an array that includes
+ * all the necessary data for the drawer
+ */
 const extractData = (data, id) => {
   let selectedData;
   let extractedData = {};

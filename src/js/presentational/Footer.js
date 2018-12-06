@@ -5,7 +5,10 @@ import React from "react";
 import "../../styles/ContentFooter.css";
 import PropTypes from "prop-types";
 
-function ContentFooter(props) {
+/**
+ * render the footer
+ */
+function Footer(props) {
 
   let {totalPage, currentPage, onClickBack, onClickNext} = props;
   let backButtonDisabled, nextButtonDisabled = false;
@@ -33,11 +36,11 @@ function ContentFooter(props) {
   );
 }
 
-ContentFooter.propTypes = {
+Footer.propTypes = {
   totalPage: PropTypes.string.isRequired,
   currentPage: PropTypes.number.isRequired,
   onClickBack: PropTypes.func.isRequired,
   onClickNext: PropTypes.func.isRequired,
 };
 
-export default ContentFooter;
+export default Footer;

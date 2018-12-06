@@ -6,6 +6,9 @@ import DrawerHeader from "../presentational/DrawerHeader";
 import DrawerList from "../presentational/DrawerList";
 import PropTypes from "prop-types";
 
+/**
+ * render the drawer
+ */
 function Drawer(props) {
 
   let {extractedData, isOpen, closeDrawer} = props;

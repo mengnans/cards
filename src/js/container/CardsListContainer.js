@@ -16,6 +16,9 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
+/**
+ * the container for the card list component
+ */
 class CardsListContainer extends React.Component {
 
   onCardClick(id) {
