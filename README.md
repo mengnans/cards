@@ -58,77 +58,21 @@ Runs the docker image
 
 
 ## Cache and data fetching algorithm
-Cache and data fetching algorithm are implemented in two differnt ways based on different assumptions.
+Cache and data fetching algorithms are implemented in two different ways based on different assumptions.
 
 I named them `forward-cache` and `history-cache`
-
-* `forward-cache` is at `master` branch
 * `history-cache` is at `history-cache` branch
-
-### `forward-cache`
-#### Assumptions
-My assumption for this algorithm is that **Users are more likely to click the next page button, and are less likely to click the back page button**.
-
-#### Caching algorithm
-
-Based on the assumption below, we can easily draw a conslusion that users need more cache for pages in front of the current page (I named it `right-cache` or `forward-cache`) than the cache for pages that are behind of the current page (I named it `left-cache`).
-
-The key thing of this algorithm is that to keep the size of `forward-cache` as big as possible.
-
-Thus, my algorithm keeps the size of `forward-cache` is always bigger than the `threshold` (which in default is 2).
-
-Whenever the algorithm finds out the `forward-cache` size is less or equal than the `threshold`, it will dispatch a action to load more data from the back-end.
-
-In addition, this algorithm tends to load as much data as possible with a single request. Meanwhile, it will also remove same amount of data from the `left-cache`. As for how many pages we should fetch from the back-end within a single time, it will be discussed in the fetching algorithm. 
-
-#### Fetching algorithm
-My fetching algorithm tends to load multiple pages at a single time, and it only fetch the pages after the right-most page in the cache. Firstly, we need to find out the max page that we can fetch.
-
-* Calculate the right most page in the cache.
-* Calculate the size of the right-cache.
-* we at most fetch ```(max-cache-size - size of the right-cache)``` pages, since we also need to keep the existing right-cache.
-* we can't read this amount of page right away with a single request, since the back-end only accpets page and perPage parameter. (for example, you can't load only page 2 3 4 5 from the back-end with a single request.)
-* so my algorithm runs a for loop (from max_amount to 1), to find out the biggest number that fulfills ```(rightmost page % this number === 0)```.
-* this biggest number is the max amount of pages we can fetch.
-
-Find it hard to understand? Don't worry. The next section will show some examples with the diagram.
-
-##### Examples
-
-![Example](https://github.com/mengnans/cards/blob/master/Forward-Caching-Explanation.png)
-
-**Note that:**
-* page 12 13 14 15 16 17 19 20 are in the cache
-* page 18 is the current page
-
-In this cases:
-
-The right most page in the cahe is 20, and the size of the `forward-cache` is 2.
-
-It will trigger the action to fetch more cache data since 2 <= `threshold`.
-
-It at most fetch ```(8 - 2) = 6``` pages, since we still need these 2 pages in the `forward-cache`.
-
-Then my algorithm runs a for loop (from 6 to 1), to find out the biggest number that fulfills ```(20 % this number === 0)```.
-
-This biggest number is 5, so my algorithm will load 5 more pages (page 21 to page 25), and put them into the cache.
-
-Also it will remove 5 leftmost cache items (page 12 to 16 will be removed).
-
-Ohter examples are:
-* right most page in cache = 24, size of the `forward-cache` is 2, it will load 6 pages, from page 25 to page 30.
-* right most page in cache = 33, size of the `forward-cache` is 2, it will load 3 pages, from page 34 to page 36.
-* right most page in cache = 24, size of the `forward-cache` is 5, it won't load more cache, since the size is bigger than the `threshold`.
+* `forward-cache` is at `master` branch
 
 ### `history-cache`
 #### Assumptions
-Caching works because most streams of accesses exhibit two properties: terporal locality and spatial locality:
+Caching works because most streams of accesses exhibit two properties: temporal locality and spatial locality:
 * Temporal locality says that if an item has been accessed lately, it is likely to be accessed again
 soon.
 * Spatial locality says that if an item has been accessed lately, other items near it (related to it
 in some way) are also likely to be accessed again soon.
 
-Based on these two properties of caching, I made a assumption that **The most recently accessed pages are more likely to be accessed again**. It is because that the most recently accessed pages not only have been accessed recently (Temporal locality), but also are close to the current page (Spatial locality).
+Based on these two properties of caching, I made an assumption that **The most recently accessed pages are more likely to be accessed again**. It is because that the most recently accessed pages not only have been accessed recently (Temporal locality), but also are close to the current page (Spatial locality).
 
 #### Caching algorithm
 Based on the above assumption, my cache saves eight most recently accessed page. 
@@ -144,10 +88,69 @@ Once the size of the cache is higher than the max cache size, the algorithm will
 
 
 #### Fetching algorithm
-Fetching only one page (12 items in this case) at a time, and only fetch the data that is not in the cache.
+Fetching only one page (12 items in this case) at a time, and only fetch the data that is not in the cache. If the fetch failed, it will re-issue a re-load request every 15 seconds.
+
+### `forward-cache`
+#### Assumptions
+My assumption for this algorithm is that **Users are more likely to click the next page button, and are less likely to click the back page button**.
+
+#### Caching algorithm
+
+This caching algorithm is actually an advanced version of the `history-cache` caching.
+
+Based on the assumption below, we can easily draw a conclusion that users need more cache for pages in front of the current page (I named it `right-cache` or `forward-cache`) than the cache for pages that are behind of the current page (I named it `left-cache`).
+
+The key thing of this algorithm is that to keep the size of `forward-cache` is never smaller than `threshold`(which in default is 2).
+
+Whenever the algorithm finds out the `forward-cache` size is less or equal than the `threshold`, it will dispatch a action to load more data from the back-end.
+
+Also, similar to the `history-cache` algorithm, it will also put recently accessed pages' data into the cache when the cache is not at maximum capacity.
+
+In addition, this algorithm tends to load as much data as possible with a single request. Meanwhile, it will also remove the same amount of data from the `left-cache`. As for how many pages we should fetch from the back-end within a single time, it will be discussed in the fetching algorithm. 
+
+#### Fetching algorithm
+My fetching algorithm tends to load multiple pages at a single time, and it only fetch the pages after the right-most page in the cache. Firstly, we need to find out the max page that we can fetch.
+
+* Calculate the right most page in the cache.
+* Calculate the size of the right-cache.
+** we at most fetch ```(max-cache-size - size of the right-cache)``` pages, since we also need to keep the existing right-cache.
+* we can't read this amount of page right away with a single request, since the back-end only accepts page and perPage parameter. (for example, you can't load only page 2 3 4 5 from the back-end with a single request.)
+* so my algorithm runs a for loop (from max_amount to 1), to find out the biggest number that fulfills ```(rightmost page % this number === 0)```.
+* this biggest number is the max amount of pages we can fetch.
+
+**Note that:** if the fetch request is rejected, my algorithm will let the system know the loading is over, and it failed. My algorithm will re-issue a reuqest to load the data of the current page once every 15 seconds.
+
+Find it hard to understand? Don't worry. The next section will show some examples with the diagram.
+
+##### Examples
+
+![Example](https://github.com/mengnans/cards/blob/master/Forward-Caching-Explanation.png)
+
+**Note that:**
+* page 12 13 14 15 16 17 19 20 are in the cache
+* page 18 is the current page
+
+In this cases:
+
+The right most page in the cache is 20, and the size of the `forward-cache` is 2.
+
+It will trigger the action to fetch more cache data since 2 <= `threshold`.
+
+It at most fetch ```(8 - 2) = 6``` pages, since we still need these 2 pages in the `forward-cache`.
+
+Then my algorithm runs a for loop (from 6 to 1), to find out the biggest number that fulfills ```(20 % this number === 0)```.
+
+This biggest number is 5, so my algorithm will load 5 more pages (page 21 to page 25), and put them into the cache.
+
+Also, it will remove 5 leftmost cache items (page 12 to 16 will be removed).
+
+Other examples are:
+* right most page in cache = 24, size of the `forward-cache` is 2, it will load 6 pages, from page 25 to page 30.
+* right most page in cache = 33, size of the `forward-cache` is 2, it will load 3 pages, from page 34 to page 36.
+* right most page in cache = 24, size of the `forward-cache` is 5, it won't load more cache, since the size is bigger than the `threshold`.
 
 ## Data strcture
-I used a page data object to save the data of each page, and it has following attrbutes:
+I used a page data object to save the data of each page, and it has following attributes:
 * page: the number of the page.
 * isLoading: whether this data is currently loading from back-end or not.
 * isRecentlyReloaded: whether this data has been recently re-loaded or not, this flag is used to let the algorithm only read this data once every 15 seconds.
@@ -156,4 +159,4 @@ I used a page data object to save the data of each page, and it has following at
 
 ## Other features
 ### Offline reconnect feature
-Once the fetch request is rejected, it will let the user know we are re-conencting. It will re-load the data once every 15 seconds.
+Once the fetch request is rejected, it will let the user know we are re-connencting. It will re-load the data of current page once every 15 seconds.
