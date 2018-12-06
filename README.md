@@ -36,6 +36,10 @@ The project will start on port 8080.
 
 Runs eslint on all the js files
 
+### `yarn lint-fix`
+
+Runs eslint on fix linting issues within the js files
+
 ### `yarn test`
 
 Runs jest and enzyme tests.
