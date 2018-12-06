@@ -3,7 +3,7 @@ import {
   PAGE_CHANGE,
   INITIAL_LOAD,
   LOAD,
-  LOAD_MORE_CACHE, SET_RECENTLY_RE_LOADED_FLAG
+  LOAD_MORE_CACHE, SET_RECENTLY_RE_LOADED_FLAG, LOAD_CURRENT_DATA
 } from "../constants/action-types";
 import {get} from "../data-fetch/data-fetch";
 import {BACKEND_URL} from "../constants/constant";
@@ -66,4 +66,12 @@ export const setRecentlyReloadedFlag = (page, flag) => ({
 export const loadMoreCache = (startPage, endPage) => ({
   type: LOAD_MORE_CACHE,
   payload: {startPage: startPage, endPage: endPage}
+});
+
+/**
+ * let redux know we are loading the current page data data
+ * @return {{type: string}}
+ */
+export const loadCurrentPageData = () => ({
+  type: LOAD_CURRENT_DATA,
 });
