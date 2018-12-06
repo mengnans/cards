@@ -1,6 +1,11 @@
 # Cards Caching
 The goal of the project is to build a cache of items on the front-end to achieve instant pagination.
 
+## Total time taken to build the app
+3 days
+
+From Monday evening to Thursday evening.
+
 ## Prerequisite
 Make sure you have `node` and `npm` installed.
 
@@ -133,8 +138,3 @@ Fetching only one page (12 items in this case) at a time, and only fetch the dat
 
 ### Common algorithm used by both implementations
 
-## Total time taken to build the app
-3 days
-
-
-From Monday evening to Thursday evening.
