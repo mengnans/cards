@@ -137,10 +137,12 @@ Fetching only one page (12 items in this case) at a time, and only fetch the dat
 
 ## Data strcture
 I used a page data object to save the data of each page, and it has following attrbutes:
-* page: the number of the page
-* isLoading: whether this data is currently loading from back-end or not
-* isRecentlyReloaded: whether this data has been recently re-loaded or not
-* attemptTimes: how many times we failed to fetch this data from back-end
-* data: the data for this page got from the back-end
+* page: the number of the page.
+* isLoading: whether this data is currently loading from back-end or not.
+* isRecentlyReloaded: whether this data has been recently re-loaded or not, this flag is used to let the algorithm only read this data once every 15 seconds.
+* attemptTimes: how many times we failed to fetch this data from back-end.
+* data: the data for this page got from the back-end.
 
-
+## Other features
+### Offline reconnect feature
+Once the fetch request is rejected, it will let the user know we are re-conencting. It will re-load the data once every 15 seconds.
