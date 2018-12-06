@@ -2,6 +2,7 @@ import {applyMiddleware, createStore} from "redux";
 import appReducer from "../reducers/reducer";
 import promiseMiddleware from "redux-promise-middleware";
 
+// apply redux-promise-middleware
 let composeStoreWithMiddleware = applyMiddleware(
   promiseMiddleware(),
 )(createStore);

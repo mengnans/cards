@@ -17,6 +17,9 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
+/**
+ * container for the drawer
+ */
 class DrawerContainer extends React.Component {
 
   render() {

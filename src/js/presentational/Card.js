@@ -10,7 +10,9 @@ import Line from "./Line";
 import PropTypes from "prop-types";
 import CircularProgress from "@material-ui/core/CircularProgress/CircularProgress";
 
-
+/**
+ * render the card
+ */
 function CardItem(props) {
 
   let {coreData, noData, isLoading, onClick, progressBarColor, loadingInfo} = props;

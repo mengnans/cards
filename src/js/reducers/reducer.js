@@ -17,7 +17,9 @@ import {
   shrinkCacheIfNeeded
 } from "../utils/utils";
 
-
+/**
+ * the default state
+ */
 const defaultState = {
   // default current page data
   currentPageData: createInitialPageData(1),

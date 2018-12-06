@@ -13,6 +13,9 @@ const styles = ({
   },
 });
 
+/**
+ * render a list of cards
+ */
 function CardsList(props) {
 
   const spacing = 16;

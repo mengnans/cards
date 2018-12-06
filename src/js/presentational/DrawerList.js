@@ -12,6 +12,9 @@ const styles = {
   },
 };
 
+/**
+ * render the drawer content list
+ */
 function drawerList(props) {
   let {drawerListData, id} = props;
 

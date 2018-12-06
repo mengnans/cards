@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React from "react";
 import "../../styles/ContentFooter.css";
-import ContentFooter from "../presentational/ContentFooter";
+import Footer from "../presentational/Footer";
 import connect from "react-redux/es/connect/connect";
 import {pageChange} from "../actions/actions";
 import PropTypes from "prop-types";
@@ -16,10 +16,13 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const ContentFooterContainer = (props) => {
+/**
+ * the container for the footer
+ */
+const FooterContainer = (props) => {
   let {totalPage, currentPage, pageChange} = props;
   return (
-    <ContentFooter
+    <Footer
       totalPage={totalPage}
       currentPage={currentPage}
       onClickNext={() => pageChange(currentPage + 1)}
@@ -28,13 +31,13 @@ const ContentFooterContainer = (props) => {
   );
 };
 
-ContentFooterContainer.propTypes = {
+FooterContainer.propTypes = {
   totalPage: PropTypes.string.isRequired,
   currentPage: PropTypes.number.isRequired,
   pageChange: PropTypes.func.isRequired,
 };
 
-const ConnectedContentFooterContainer = connect(mapStateToProps, mapDispatchToProps)(ContentFooterContainer);
+const ConnectedFooterContainer = connect(mapStateToProps, mapDispatchToProps)(FooterContainer);
 
-export default ConnectedContentFooterContainer;
+export default ConnectedFooterContainer;
 

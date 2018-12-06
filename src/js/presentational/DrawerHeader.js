@@ -11,6 +11,9 @@ const styles = {
   },
 };
 
+/**
+ * render the drawer header
+ */
 function drawerHeader(props) {
   let {number, onClickExit} = props;
 

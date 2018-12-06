@@ -67,6 +67,9 @@ const calcCacheNeeded = (currentPage, cache) => {
   return cacheNeededObject;
 };
 
+/**
+ * the container of the whole app
+ */
 class AppContentContainer extends Component {
 
   componentDidMount() {

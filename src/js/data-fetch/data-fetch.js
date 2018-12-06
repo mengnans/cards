@@ -2,6 +2,12 @@
 import "whatwg-fetch";
 import {API_TOKEN} from "../constants/constant";
 
+/**
+ * use get method to fetch the data from the back-end
+ * @param url
+ * @param params url parameters
+ * @returns {Promise<any>}
+ */
 export const get = (url = "", params = {}) => {
   return new Promise((resolve, reject) => {
     let extraUrl = "";

@@ -2,6 +2,9 @@
 import React from "react";
 import AppContentContainer from "../container/AppContentContainer";
 
+/**
+ * the whole app
+ */
 function App() {
   return (
     <AppContentContainer/>
