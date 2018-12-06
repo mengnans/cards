@@ -79,7 +79,7 @@ Thus, my algorithm keeps the size of `forward-cache` is always bigger than the `
 
 Whenever the algorithm finds out the `forward-cache` size is less or equal than the `threshold`, it will dispatch a action to load more data from the back-end.
 
-In addition, this algorithm tends to load as much data as possible with a single request. As for how many pages we fetch from the back-end within a single time, it will be discussed in the fetching algorithm.
+In addition, this algorithm tends to load as much data as possible with a single request. Meanwhile, it will also remove same amount of data from the `left-cache`. As for how many pages we should fetch from the back-end within a single time, it will be discussed in the fetching algorithm. 
 
 #### Fetching algorithm
 My fetching algorithm tends to load multiple pages at a single time, and it only fetch the pages after the right-most page in the cache. Firstly, we need to find out the max page that we can fetch.
@@ -95,14 +95,19 @@ Find it hard to understand? Don't worry. The next section will show some example
 
 ##### Examples
 
-In this cases:
+![Example](https://github.com/mengnans/cards/blob/master/Forward-Caching-Explanation.png)
 
+**Note that:**
+* page 12 13 14 15 16 17 19 20 are in the cache
+* page 18 is the current page
+
+In this cases:
 
 The right most page in the cahe is 20, and the size of the `forward-cache` is 2.
 
 It will trigger the action to fetch more cache data since 2 <= `threshold`.
 
-It at most fetch ```(8 - 2) = 6``` pages, since we still need this 2 pages in the `forward-cache`.
+It at most fetch ```(8 - 2) = 6``` pages, since we still need these 2 pages in the `forward-cache`.
 
 Then my algorithm runs a for loop (from 6 to 1), to find out the biggest number that fulfills ```(20 % this number === 0)```.
 
