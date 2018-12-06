@@ -9,6 +9,6 @@ build:
     @echo "Successfully built $(CONTAINER_IMAGE)..."
 
 serve:
-	docker run -t -p 80:80 -- $(CONTAINER_IMAGE)
+	docker run -d -t -p 8080:80 -- $(CONTAINER_IMAGE)
 
-.PHONY: build lint serve
+.PHONY: build serve
