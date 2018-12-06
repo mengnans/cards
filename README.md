@@ -74,7 +74,16 @@ Thus, my algorithm keeps the size of `forward-cache` is always bigger than the `
 
 Whenever the algorithm finds out the `forward-cache` size is less or equal than the `threshold`, it will dispatch a action to load more data from the back-end.
 
-In addition, this algorithm tends to load as much data as possible with a single request.
+In addition, this algorithm tends to load as much data as possible with a single request. As for how many pages we fetch from the back-end within a single time, it will be discussed in the fetching algorithm.
+
+#### Fetching algorithm
+My fetching algorithm tends to load multiple pages at the same time, and it only fetch the pages after the right-most page in the cache. Firstly, we need to find out the max page that we can fetch.
+* Calc the most right page in the cache
+* Calc the size of the right-cache
+* we at most fetch (max-cache-size - size of the right-cache) pages, since we also need to keep the right-cache
+* 
+
+
 
 
 ### `history-cache`
