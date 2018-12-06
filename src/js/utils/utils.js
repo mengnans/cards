@@ -56,36 +56,24 @@ export const generateRandomInteger = (min, max) => {
 };
 
 /**
- * remove cache items when the length of cache > max cache size
+ * remove the left-most elements
  * @param cache
  * @param cacheMaxSize
- * @param currentPageNumber
- * @param onlyRemoveBackwardData
  */
-export const shrinkCacheIfNeeded = (cache, cacheMaxSize, currentPageNumber, onlyRemoveBackwardData) => {
+export const shrinkCacheIfNeeded = (cache, cacheMaxSize) => {
+  // while the cache exceeds itx maximum size
   while (cache.length > cacheMaxSize) {
-    // if we only want to remove the data whose page numbers are smaller than current page
-    if (onlyRemoveBackwardData) {
-      for (let i = 0; i < cache.length; i++) {
-        if (cache[i].page < currentPageNumber) {
-          cache.splice(i, 1);
-          break;
-        }
-      }
-    } else {
-      // in other cases
-      // remove the left most page
-      // since we are unlikely to touch it
-      let rightMostCachePage = currentPageNumber;
-      let leftmostCacheIndex = 0;
-
-      for (let i = 0; i < cache.length; i++) {
-        if (cache[i].page < rightMostCachePage) {
-          rightMostCachePage = cache[i].page;
-          leftmostCacheIndex = i;
-        }
-      }
-      cache.splice(leftmostCacheIndex, 1);
-    }
+    // remove the first element (left-most element)
+    cache.shift();
   }
+};
+
+/**
+ * sort the cache based on its page number
+ * @param cache
+ */
+export const sortTheCache = (cache) => {
+  cache.sort((a, b) => {
+    return a.page - b.page;
+  });
 };

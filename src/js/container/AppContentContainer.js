@@ -4,7 +4,7 @@ import React, {Component} from "react";
 import "../../styles/AppContent.css";
 import {
   initialLoad,
-  load,
+  load, loadCurrentPageData,
   loadMoreCache, setRecentlyReloadedFlag,
 } from "../actions/actions";
 import {connect} from "react-redux";
@@ -32,6 +32,7 @@ const mapDispatchToProps = dispatch => {
     load: (page, dataPerPage) => dispatch(load(page, dataPerPage)),
     loadMoreCache: (startPage, endPage) => dispatch(loadMoreCache(startPage, endPage)),
     setRecentlyReloadedFlag: (page, flag) => dispatch(setRecentlyReloadedFlag(page, flag)),
+    loadCurrentPageData: () => dispatch(loadCurrentPageData()),
   };
 };
 
@@ -55,36 +56,30 @@ const mapDispatchToProps = dispatch => {
  * if this case, 14 is divisible by 2
  * then we can only load 2 pages, which is 15 and 16
  *
- * if you still find it hard to understand this algorithm, please check read me file for more insights
+ * if you still find it hard to understand this algorithm, please check README.md file for more insights
  *
  * @param currentPage the number of current page
  * @param cache the cache
  * @return object that includes whether we need to load more data, most forward page number and how many page to load
  */
 const calcCacheNeeded = (currentPage, cache) => {
-  let forwardCachedDataLeft = 0;
-  let mostForwardPage = currentPage;
+  let forwardCachedDataLeft;
+  // since the cache is sorted all the time
+  // so the last page is the right most page
+  let mostForwardPage = cache[cache.length - 1].page;
   let cacheNeededObject = {};
 
-  // find the most right(forward) page number
-  // and clac the right(forward) cache left
-  for (let i = 0; i < cache.length; i++) {
-    let cachePage = cache[i].page;
-    if (cachePage > currentPage) {
-      forwardCachedDataLeft++;
-      if (cachePage > mostForwardPage) {
-        mostForwardPage = cachePage;
-      }
-    }
-  }
+  forwardCachedDataLeft = mostForwardPage - currentPage;
 
   if (forwardCachedDataLeft <= FORWARD_CACHE_THRESHOLD) {
     cacheNeededObject.isMoreCacheNeeded = true;
     cacheNeededObject.mostForwardPage = mostForwardPage;
+    // we at most fetch maxLoadPage at a single time
+    // since we still wanna keep the existing cache
     let maxLoadPage = MAX_CACHE_LENGTH - forwardCachedDataLeft;
+    // calc how many pages we can load from the back-end with a single request
     for (let i = maxLoadPage; i > 0; i--) {
       if (mostForwardPage % i === 0) {
-        // calc the max page to load
         cacheNeededObject.maxPageToLoad = i;
         break;
       }
@@ -107,7 +102,7 @@ class AppContentContainer extends Component {
   }
 
   componentWillReceiveProps(nextProps, nextContext) {
-    let {currentPageData, load, initialLoad, setRecentlyReloadedFlag, loadMoreCache, totalPage, cache} = nextProps;
+    let {currentPageData, load, initialLoad, setRecentlyReloadedFlag, loadMoreCache, totalPage, cache, loadCurrentPageData} = nextProps;
     let page = currentPageData.page;
 
     // if no total page and it's not loading, it means the initial load has failed
@@ -130,6 +125,8 @@ class AppContentContainer extends Component {
     // if no data and it's not loading, then load it
     // also only load the data when the data is not recently loaded
     else if (!currentPageData.data && !currentPageData.isLoading && !currentPageData.isRecentlyReLoaded) {
+
+      loadCurrentPageData();
 
       // load the current page
       load(page - 1, DATA_PER_PAGE);

@@ -3,9 +3,9 @@
 import {
   INITIAL_LOAD_FULFILLED,
   INITIAL_LOAD_PENDING,
-  INITIAL_LOAD_REJECTED,
+  INITIAL_LOAD_REJECTED, LOAD_CURRENT_DATA,
   LOAD_FULFILLED, LOAD_MORE_CACHE,
-  LOAD_PENDING, LOAD_REJECTED,
+  LOAD_REJECTED,
   PAGE_CHANGE, SET_RECENTLY_RE_LOADED_FLAG,
   TOGGLE_DRAWER
 } from "../constants/action-types";
@@ -14,7 +14,7 @@ import {
   calcTotalPage,
   createInitialPageData,
   getDataFromCache,
-  shrinkCacheIfNeeded
+  shrinkCacheIfNeeded, sortTheCache
 } from "../utils/utils";
 
 /**
@@ -66,8 +66,13 @@ const appReducer = (state = defaultState, action) => {
       // if current page data is not in the cache
       if (!currentPageDataFromCache) {
         cache.push(state.currentPageData);
+
+        // after pushing new data in the cache
+        // sort the cache first
+        sortTheCache(cache);
+
         // remove the leftmost elements if needed
-        shrinkCacheIfNeeded(cache, MAX_CACHE_LENGTH, currentPage, false);
+        shrinkCacheIfNeeded(cache, MAX_CACHE_LENGTH);
       }
       return {
         ...state,
@@ -131,14 +136,33 @@ const appReducer = (state = defaultState, action) => {
       let totalItemNumber = action.payload.totalItemNumber;
       let totalPage;
       let currentPageData = {...state.currentPageData};
-      let fetchedCurrentPageData = fetchedData.slice(0, DATA_PER_PAGE);
-      let fetchedForwardData = fetchedData.slice(DATA_PER_PAGE);
+      let fetchedCurrentPageData;
+      let fetchedForwardData;
       let cache = [...state.cache];
+
+      try{
+        fetchedCurrentPageData = fetchedData.slice(0, DATA_PER_PAGE);
+      } catch(err){
+        console.log(err);
+        fetchedCurrentPageData = null;
+      }
+
+      try{
+        fetchedForwardData = fetchedData.slice(DATA_PER_PAGE);
+      } catch(err){
+        console.log(err);
+        fetchedForwardData = null;
+      }
 
 
       for (let i = 0; i < cache.length; i++) {
         // set the data
-        cache[i].data = fetchedForwardData.slice(i * DATA_PER_PAGE, (i + 1) * DATA_PER_PAGE);
+        try{
+          cache[i].data = fetchedForwardData.slice(i * DATA_PER_PAGE, (i + 1) * DATA_PER_PAGE);
+        } catch(err){
+          console.log(err);
+          cache[i].data = null;
+        }
         // let redux know the loading of these data is over
         cache[i].isLoading = false;
         // set the attemptTimes
@@ -176,19 +200,6 @@ const appReducer = (state = defaultState, action) => {
       return {...state, currentPageData: currentPageData, cache: cache};
     }
 
-    case LOAD_PENDING: {
-      let currentPageData = {...state.currentPageData};
-      // in my design, there are two ways of load
-      // 1. load the current page
-      // 2. load other caches
-      // It only load the current page when current page data is empty
-      if(!currentPageData.data){
-        // let redux know we are loading the current page
-        currentPageData.isLoading = true;
-      }
-      return {...state, currentPageData: currentPageData};
-    }
-
     case LOAD_FULFILLED: {
       let fetchedData = action.payload.data;
       let totalItemNumber = action.payload.totalItemNumber;
@@ -206,7 +217,15 @@ const appReducer = (state = defaultState, action) => {
 
       // put these data into current page or cache
       for (let i = startPage; i <= endPage; i++) {
-        let singlePageData = fetchedData.slice((i - startPage) * DATA_PER_PAGE, (i - startPage + 1) * DATA_PER_PAGE);
+
+        let singlePageData;
+        try{
+          singlePageData = fetchedData.slice((i - startPage) * DATA_PER_PAGE, (i - startPage + 1) * DATA_PER_PAGE);
+        }catch(err){
+          console.log(err);
+          singlePageData = null;
+        }
+
         if (i === currentPageData.page) {
           currentPageData.isLoading = false;
           currentPageData.data = singlePageData;
@@ -223,8 +242,7 @@ const appReducer = (state = defaultState, action) => {
       }
 
       // calc the total page
-      totalPage = calcTotalPage(totalItemNumber, DATA_PER_PAGE);
-      return {...state, currentPageData: currentPageData, cache: cache, totalPage: totalPage.toString()};
+      return {...state, currentPageData: currentPageData, cache: cache,};
 
     }
 
@@ -262,11 +280,29 @@ const appReducer = (state = defaultState, action) => {
       return {...state, currentPageData: currentPageData, cache: cache};
     }
 
+    case LOAD_CURRENT_DATA: {
+      let currentPageData = {...state.currentPageData};
+      if (!currentPageData.data) {
+        // let redux know we are loading the current page
+        currentPageData.isLoading = true;
+      }
+      return {...state, currentPageData: currentPageData};
+    }
+
     case LOAD_MORE_CACHE: {
       let {startPage, endPage} = action.payload;
       let cache = [...state.cache];
       let currentPageData = {...state.currentPageData};
-      let currentPageNumber = currentPageData.page;
+
+      if (startPage > state.totalPage) {
+        // do nothing if the start page exceeds the total page number
+        return state;
+      }
+
+      // we don't need to load data after the total page
+      if (endPage > state.totalPage) {
+        endPage = state.totalPage;
+      }
 
       // let redux know we are loading these cache data
       for (let i = startPage; i <= endPage; i++) {
@@ -274,8 +310,13 @@ const appReducer = (state = defaultState, action) => {
         pageData.isLoading = true;
         cache.push(pageData);
       }
+
+      // after pushing new data in the cache
+      // sort the cache first
+      sortTheCache(cache);
+
       // remove backward (left) elements
-      shrinkCacheIfNeeded(cache, MAX_CACHE_LENGTH, currentPageNumber, true);
+      shrinkCacheIfNeeded(cache, MAX_CACHE_LENGTH);
 
       return {...state, cache: cache};
     }
