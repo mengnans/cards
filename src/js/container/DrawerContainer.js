@@ -23,7 +23,7 @@ const mapDispatchToProps = dispatch => {
 class DrawerContainer extends React.Component {
 
   render() {
-    let {currentPageData} = this.props;
+    let {currentPageData, closeDrawer} = this.props;
     let isOpen, extractedData;
 
     if (!this.props.id) {
@@ -37,7 +37,7 @@ class DrawerContainer extends React.Component {
       <Drawer
         extractedData={extractedData}
         isOpen={isOpen}
-        closeDrawer={this.props.closeDrawer}
+        closeDrawer={closeDrawer}
       />
     );
   }
@@ -45,6 +45,7 @@ class DrawerContainer extends React.Component {
 
 DrawerContainer.propTypes = {
   currentPageData: PropTypes.object,
+  closeDrawer: PropTypes.func.isRequired,
 };
 
 const ConnectedDrawerContainer = connect(mapStateToProps, mapDispatchToProps)(DrawerContainer);

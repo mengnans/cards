@@ -75,12 +75,12 @@ export const shrinkCacheIfNeeded = (cache, cacheMaxSize, currentPageNumber, only
       // in other cases
       // remove the left most page
       // since we are unlikely to touch it
-      let leftmostCachePage = currentPageNumber;
+      let rightMostCachePage = currentPageNumber;
       let leftmostCacheIndex = 0;
 
       for (let i = 0; i < cache.length; i++) {
-        if (cache[i].page < leftmostCachePage) {
-          leftmostCachePage = cache[i].page;
+        if (cache[i].page < rightMostCachePage) {
+          rightMostCachePage = cache[i].page;
           leftmostCacheIndex = i;
         }
       }
