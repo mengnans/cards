@@ -107,7 +107,7 @@ If you find hard to understandg the above calculation, please have a look at the
 Ohter examples are:
 * right most page = 24, size of the `forward-cache` is 2, it will load 6 pages, from page 25 to page 30.
 * right most page = 33, size of the `forward-cache` is 1, it will load 3 pages, from page 34 to page 36.
-* right most page = 24, size of the `forward-cache` is 5, it won't load more cache, since the size is bigger that the `threshold`.
+* right most page = 24, size of the `forward-cache` is 5, it won't load more cache, since the size is bigger than the `threshold`.
 
 
 ### `history-cache`
