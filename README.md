@@ -91,18 +91,24 @@ My fetching algorithm tends to load multiple pages at a single time, and it only
 * so my algorithm runs a for loop (from max_amount to 1), to find out the biggest number that fulfills ```(rightmost page % this number === 0)```.
 * this biggest number is the max amount of pages we can fetch.
 
+Find it hard to understand? Don't worry. The next section will show some examples with the diagram.
+
 ##### Examples
-The right most page in the cahe is 14, and the size of the `forward-cache` is 2.
+
+In this cases:
+
+
+The right most page in the cahe is 20, and the size of the `forward-cache` is 2.
 
 It will trigger the action to fetch more cache data since 2 <= `threshold`.
 
 It at most fetch ```(8 - 2) = 6``` pages, since we still need this 2 pages in the `forward-cache`.
 
-Then my algorithm runs a for loop (from 6 to 1), to find out the biggest number that fulfills ```(14 % this number === 0)```.
+Then my algorithm runs a for loop (from 6 to 1), to find out the biggest number that fulfills ```(20 % this number === 0)```.
 
-This biggest number is 2, so my algorithm will load 2 more pages (page 15 and page 16), and put them into the cache.
+This biggest number is 5, so my algorithm will load 5 more pages (page 21 to page 25), and put them into the cache.
 
-If you find hard to understandg the above calculation, please have a look at the following examples to get some insights.
+Also it will remove 5 leftmost cache items (page 12 to 16 will be removed).
 
 Ohter examples are:
 * right most page in cache = 24, size of the `forward-cache` is 2, it will load 6 pages, from page 25 to page 30.
