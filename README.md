@@ -51,3 +51,18 @@ I named them `forward-cache` and `history-cache`
 
 * `forward-cache` is at `master` branch
 * `history-cache` is at `history-cache` branch
+
+### `forward-cache`
+#### Assumptions
+Users are more likely to read 
+
+### `history-cache`
+#### Assumptions
+Caching works because most streams of accesses exhibit two properties: terporal locality and spatial locality:
+* Temporal locality says that if an item has been accessed lately, it is likely to be accessed again
+soon.
+* Spatial locality says that if an item has been accessed lately, then other items near it (related to it
+in some way) are also likely to be accessed again soon.
+
+
+Based on these two properties of caching, I made a assumption that *the most recently accessed pages are more likely to be accessed again*. It is because that the most recently accessed pages not only have been accessed recently (following the Temporal locality), but also are close to the current page(following the Spatial locality).
