@@ -67,7 +67,7 @@ I named them `forward-cache` and `history-cache`
 
 ### `forward-cache`
 #### Assumptions
-My assumption for this algorithm is that **Users are more likely to click next page button, and are less likely to click the back page button**.
+My assumption for this algorithm is that **Users are more likely to click the next page button, and are less likely to click the back page button**.
 
 #### Caching algorithm
 
@@ -82,13 +82,13 @@ Whenever the algorithm finds out the `forward-cache` size is less or equal than 
 In addition, this algorithm tends to load as much data as possible with a single request. As for how many pages we fetch from the back-end within a single time, it will be discussed in the fetching algorithm.
 
 #### Fetching algorithm
-My fetching algorithm tends to load multiple pages at the same time, and it only fetch the pages after the right-most page in the cache. Firstly, we need to find out the max page that we can fetch.
+My fetching algorithm tends to load multiple pages at a single time, and it only fetch the pages after the right-most page in the cache. Firstly, we need to find out the max page that we can fetch.
 
 * Calculate the right most page in the cache.
 * Calculate the size of the right-cache.
-* we at most fetch (max-cache-size - size of the right-cache) pages, since we also need to keep the right-cache.
-* we can't read this amount of page right away, since the back-end only accpets page and perPage parameter.
-* so my algorithm runs a for loop (from max_amount to 1), to find out the biggest number that fulfills (rightmost page % this number === 0).
+* we at most fetch ```(max-cache-size - size of the right-cache)``` pages, since we also need to keep the right-cache.
+* we can't read this amount of page right away with a single request, since the back-end only accpets page and perPage parameter.
+* so my algorithm runs a for loop (from max_amount to 1), to find out the biggest number that fulfills ```(rightmost page % this number === 0)```.
 * this biggest number is the max amount of pages we can fetch.
 
 ##### Examples
@@ -96,9 +96,9 @@ The right most page in the cahe is 14, and the size of the `forward-cache` is 2.
 
 It will trigger the action to fetch more cache data since 2 <= `threshold`.
 
-It at most fetch (8 - 2) = 6 pages, since we still need this 2 pages in the `forward-cache`.
+It at most fetch ```(8 - 2) = 6``` pages, since we still need this 2 pages in the `forward-cache`.
 
-Then my algorithm runs a for loop (from 6 to 1), to find out the biggest number that fulfills (14 % this number === 0).
+Then my algorithm runs a for loop (from 6 to 1), to find out the biggest number that fulfills ```(14 % this number === 0)```.
 
 This biggest number is 2, so my algorithm will load 2 more pages (page 15 and page 16), and put them into the cache.
 
@@ -108,7 +108,6 @@ Ohter examples are:
 * right most page = 24, size of the `forward-cache` is 2, it will load 6 pages, from page 25 to page 30.
 * right most page = 33, size of the `forward-cache` is 1, it will load 3 pages, from page 34 to page 36.
 * right most page = 24, size of the `forward-cache` is 5, it won't load more cache, since the size is bigger than the `threshold`.
-
 
 ### `history-cache`
 #### Assumptions
@@ -136,5 +135,12 @@ Once the size of the cache is higher than the max cache size, the algorithm will
 #### Fetching algorithm
 Fetching only one page (12 items in this case) at a time, and only fetch the data that is not in the cache.
 
-### Common algorithm used by both implementations
+## Data strcture
+I used a page data object to save the data of each page, and it has following attrbutes:
+* page: the number of the page
+* isLoading: whether this data is currently loading from back-end or not
+* isRecentlyReloaded: whether this data has been recently re-loaded or not
+* attemptTimes: how many times we failed to fetch this data from back-end
+* data: the data for this page got from the back-end
+
 
