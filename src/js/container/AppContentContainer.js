@@ -55,6 +55,8 @@ const mapDispatchToProps = dispatch => {
  * if this case, 14 is divisible by 2
  * then we can only load 2 pages, which is 15 and 16
  *
+ * if you still find it hard to understand this algorithm, please check read me file for more insights
+ *
  * @param currentPage the number of current page
  * @param cache the cache
  * @return object that includes whether we need to load more data, most forward page number and how many page to load
