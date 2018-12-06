@@ -88,7 +88,7 @@ Once the size of the cache is higher than the max cache size, the algorithm will
 
 
 #### Fetching algorithm
-Fetching only one page (12 items in this case) at a time, and only fetch the data that is not in the cache. If the fetch failed, it will re-issue a re-load request every 15 seconds.
+Fetching only one page (12 items in this case) at a time, and only fetch the data that is not in the cache. If the fetch failed, it will let the system know the loading is over, and it failed. My algorithm will re-issue a re-load request of the current page every 15 seconds.
 
 ### `forward-cache`
 #### Assumptions
