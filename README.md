@@ -1,3 +1,11 @@
+# Cards Caching
+The goal of the project is to build a cache of items on the front-end to achieve instant pagination.
+
+## Prerequisite
+Make sure you have `node` and `npm` installed.
+
+## Supported platforms
+Windows, Mac, Linux
 
 ## Running this project locally
 
@@ -54,7 +62,20 @@ I named them `forward-cache` and `history-cache`
 
 ### `forward-cache`
 #### Assumptions
-Users are more likely to read 
+My assumption for this algorithm is that **Users are more likely to click next page button, and are less likely to click the back page button**.
+
+#### Caching algorithm
+
+Based on the assumption below, we can easily draw a conslusion that users need more cache for pages in front of the current page than the cache for pages (I named it `right-cache` or `forward-cache`) that are behind of the current page (I named it `left-cache`).
+
+The key thing of this algorithm is that to keep the size of `forward-cache` as big as possible.
+
+Thus, my algorithm keeps the size of `forward-cache` is always bigger than the `threshold` (which in default is 2).
+
+Whenever the algorithm finds out the `forward-cache` size is less or equal than the `threshold`, it will dispatch a action to load more data from the back-end.
+
+In addition, this algorithm tends to load as much data as possible with a single request.
+
 
 ### `history-cache`
 #### Assumptions
@@ -65,7 +86,7 @@ soon.
 in some way) are also likely to be accessed again soon.
 
 
-Based on these two properties of caching, I made a assumption that **the most recently accessed pages are more likely to be accessed again**. It is because that the most recently accessed pages not only have been accessed recently (Temporal locality), but also are close to the current page (Spatial locality).
+Based on these two properties of caching, I made a assumption that **The most recently accessed pages are more likely to be accessed again**. It is because that the most recently accessed pages not only have been accessed recently (Temporal locality), but also are close to the current page (Spatial locality).
 
 #### Caching algorithm
 Based on the above assumption, my cache saves eight most recently accessed page. 
@@ -74,8 +95,16 @@ Once the user triggers the pageChange action, the data of the current page will 
 
 Once the size of the cache is higher than the max cache size, the algorithm will remove the lest recently accessed page data.
 
+##### Example
+
+
 #### Fetching algorithm
 Fetching only one page (12 items in this case) at a time, and only fetch the data that is not in the cache.
 
 ### Common algorithm used by both implementations
 
+## Total time taken to build the app
+3 days
+
+
+From Monday evening to Thursday evening.
