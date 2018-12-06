@@ -24,7 +24,6 @@ export const calcTotalPage = (totalDataNumber, dataPerPage) => {
 
 export const reLoadedData = (data) => {
   data.isLoading = true;
-  data.isRecentlyReLoaded = true;
   data.attemptTimes++;
 };
 

@@ -6,7 +6,7 @@ import {
   initialLoad,
   load,
   loadMoreCache,
-  removeRecentlyReloadedFlag
+  setRecentlyReloadedFlag
 } from "../actions/actions";
 import {connect} from "react-redux";
 import AppContent from "../presentational/AppContent";
@@ -25,7 +25,7 @@ const mapDispatchToProps = dispatch => {
   return {
     initialLoad: (page, dataPerPage) => dispatch(initialLoad(page, dataPerPage)),
     load: (page, dataPerPage) => dispatch(load(page, dataPerPage)),
-    removeIsRecentlyLoadedFlag: (pageToRemove) => dispatch(removeIsRecentlyLoadedFlag(pageToRemove)),
+    setRecentlyReloadedFlag: (page, flag) => dispatch(setRecentlyReloadedFlag(page, flag)),
     loadMoreCache: (startPage, endPage) => dispatch(loadMoreCache(startPage, endPage))
   };
 };
@@ -80,7 +80,10 @@ class AppContentContainer extends Component {
     if (totalPage === "?" && !currentPageData.isLoading && !currentPageData.isRecentlyReLoaded) {
       initialLoad(0, 5 * DATA_PER_PAGE);
       // the reload can only occur once every 5 seconds
-      setTimeout(() => removeRecentlyReloadedFlag(currentPageData.page), RE_LOAD_INTERVAL * 1000);
+      if (currentPageData.attemptTimes >= 1) {
+        setRecentlyReloadedFlag(page, true);
+        setTimeout(() => setRecentlyReloadedFlag(page, false), RE_LOAD_INTERVAL * 1000);
+      }
     }
     // if no data and it's not loading, then load it
     // also only load the data when the data is not recently loaded
@@ -91,7 +94,8 @@ class AppContentContainer extends Component {
       // then it's a reload
       // the reload can only occur once every 5 seconds
       if (currentPageData.attemptTimes >= 1) {
-        setTimeout(() => removeRecentlyReloadedFlag(currentPageData.page), RE_LOAD_INTERVAL * 1000);
+        setRecentlyReloadedFlag(page, true);
+        setTimeout(() => setRecentlyReloadedFlag(page, false), RE_LOAD_INTERVAL * 1000);
       }
     } else {
       let cacheNeededObject = calcCacheNeeded(page, cache);
@@ -122,7 +126,7 @@ AppContentContainer.propTypes = {
   totalPage: PropTypes.string.isRequired,
   currentPageData: PropTypes.object.isRequired,
   initialLoad: PropTypes.func.isRequired,
-  removeIsRecentlyLoadedFlag: PropTypes.func.isRequired,
+  setRecentlyReloadedFlag: PropTypes.func.isRequired,
   loadMoreCache: PropTypes.func.isRequired,
   load: PropTypes.func.isRequired,
   cache: PropTypes.array.isRequired,
