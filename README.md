@@ -71,7 +71,7 @@ My assumption for this algorithm is that **Users are more likely to click the ne
 
 #### Caching algorithm
 
-Based on the assumption below, we can easily draw a conslusion that users need more cache for pages in front of the current page than the cache for pages (I named it `right-cache` or `forward-cache`) that are behind of the current page (I named it `left-cache`).
+Based on the assumption below, we can easily draw a conslusion that users need more cache for pages in front of the current page (I named it `right-cache` or `forward-cache`) than the cache for pages that are behind of the current page (I named it `left-cache`).
 
 The key thing of this algorithm is that to keep the size of `forward-cache` as big as possible.
 
