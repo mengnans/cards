@@ -99,7 +99,7 @@ Find it hard to understand? Don't worry. The next section will show some example
 
 **Note that:**
 * page 12 13 14 15 16 17 19 20 are in the cache
-* page 18 are current page
+* page 18 is the current page
 
 In this cases:
 
