@@ -108,7 +108,9 @@ The key thing of this algorithm is that to keep the size of `forward-cache` is n
 
 Whenever the algorithm finds out the `forward-cache` size is less or equal than the `threshold`, it will dispatch a action to load more data from the back-end.
 
-Also, similar to the `history-cache` algorithm, it will also put recently accessed pages' data into the cache when the cache is not at maximum capacity.
+Also, similar to the `history-cache` algorithm, it will also put recently accessed pages' data into the cache. 
+
+When the cache exceeds its maximum capacity, it will remove the left-most page data in the cache.
 
 However, differnt from the `history-cache` algorithm, in order to minimise the number of the backend requests, `forward-cache` algorithm algorithm tends to load as much data as possible with a single request. Meanwhile, it will also remove the same amount of data from the `left-cache`. As for how many pages we should fetch from the back-end within a single request, it will be discussed in the fetching algorithm. 
 
