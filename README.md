@@ -112,6 +112,8 @@ Also, similar to the `history-cache` algorithm, it will also put recently access
 
 However, differnt from the `history-cache` algorithm, in order to minimise the number of the backend requests, `forward-cache` algorithm algorithm tends to load as much data as possible with a single request. Meanwhile, it will also remove the same amount of data from the `left-cache`. As for how many pages we should fetch from the back-end within a single request, it will be discussed in the fetching algorithm. 
 
+Addtionally, when the user click back button, and that page is not in the cache, the algorithm will fetch the data of that page.
+
 #### Fetching algorithm
 My fetching algorithm tends to load multiple pages at a single time, and it only fetch the pages after the right-most page in the cache. Firstly, we need to find out the max page that we can fetch.
 
